@@ -13,5 +13,10 @@ struct floatingApp: App {
         WindowGroup {
             ContentView()
         }
+        .windowResizability(.contentSize)
+        .commands {
+            // Remove unnecessary menu items
+            CommandGroup(replacing: .newItem) { }
+        }
     }
 }
