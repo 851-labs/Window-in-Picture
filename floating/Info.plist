@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>LSUIElement</key>
+    <true/>
+    <key>CFBundleName</key>
+    <string>Floating PiP</string>
+    <key>CFBundleDisplayName</key>
+    <string>Floating PiP</string>
+    <key>NSScreenCaptureUsageDescription</key>
+    <string>Floating PiP needs screen recording permission to mirror windows in picture-in-picture mode.</string>
+</dict>
+</plist>

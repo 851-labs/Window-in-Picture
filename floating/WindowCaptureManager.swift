@@ -7,20 +7,21 @@
 
 import Combine
 import Foundation
+import Observation
 import ScreenCaptureKit
 import SwiftUI
 
-@MainActor
-class WindowCaptureManager: ObservableObject {
-  @Published var availableWindows: [SCWindow] = []
-  @Published var hasPermission = false
-  @Published var isRefreshing = false
-  @Published var selectedWindow: SCWindow?
-    
+@Observable
+class WindowCaptureManager {
+  var availableWindows: [SCWindow] = []
+  var hasPermission = false
+  var isRefreshing = false
+  var selectedWindow: SCWindow?
+
   private var stream: SCStream?
   private var streamOutput: CaptureStreamOutput?
-  private var isCapturing = false
-    
+  var isCapturing = false
+
   init() {
     Task {
       await checkPermission()
@@ -29,7 +30,7 @@ class WindowCaptureManager: ObservableObject {
       }
     }
   }
-    
+
   func checkPermission() async {
     do {
       // Try to get shareable content to check if we have permission
@@ -44,7 +45,7 @@ class WindowCaptureManager: ObservableObject {
       }
     }
   }
-    
+
   func requestPermission() async {
     // On macOS, we can't directly request permission - the system will prompt when we try to use the API
     // Just try to access content which will trigger the system prompt if needed
@@ -53,28 +54,29 @@ class WindowCaptureManager: ObservableObject {
       await refreshWindows()
     }
   }
-    
+
   func refreshWindows() async {
     await MainActor.run {
       isRefreshing = true
     }
-        
+
     do {
       let content = try await SCShareableContent.excludingDesktopWindows(
         false,
         onScreenWindowsOnly: true
       )
-            
+
       let windows = content.windows.filter { window in
         guard let app = window.owningApplication,
-              let title = window.title,
-              !title.isEmpty,
-              window.isOnScreen else { return false }
-                
+          let title = window.title,
+          !title.isEmpty,
+          window.isOnScreen
+        else { return false }
+
         // Filter out our own app
         let bundleID = app.bundleIdentifier
         if bundleID == Bundle.main.bundleIdentifier { return false }
-                
+
         // Filter out system UI and menubar apps
         let excludedBundleIDs = [
           "com.apple.controlcenter",
@@ -89,11 +91,11 @@ class WindowCaptureManager: ObservableObject {
           "com.apple.finder.Open-With-Pro",
           "com.apple.AirPlayUIAgent",
           "com.apple.WiFiAgent",
-          "com.apple.BluetoothUIService"
+          "com.apple.BluetoothUIService",
         ]
-                
+
         if excludedBundleIDs.contains(bundleID) { return false }
-                
+
         // Filter out menubar apps (they typically have no proper window title or specific patterns)
         let excludedAppNames = [
           "Control Center",
@@ -103,9 +105,9 @@ class WindowCaptureManager: ObservableObject {
           "SystemUIServer",
           "Dock",
           "Spotlight",
-          "Siri"
+          "Siri",
         ]
-                
+
         // Also check for common menubar app patterns in bundle IDs
         let menubarPatterns = ["statusitem", "menubar", "agent", "helper", "menu"]
         if menubarPatterns.contains(where: { bundleID.lowercased().contains($0) }) {
@@ -115,20 +117,20 @@ class WindowCaptureManager: ObservableObject {
             return false
           }
         }
-                
+
         if excludedAppNames.contains(app.applicationName) { return false }
-                
+
         // Filter out windows that look like menubar popups or system windows
         // These often have very small heights or specific frame characteristics
         if window.frame.height < 50 && window.frame.width < 300 { return false }
-                
+
         // Filter out windows with generic system-like titles
         let excludedTitles = ["Item-0", "Focus", "Menubar", "Menu Bar"]
         if excludedTitles.contains(where: { title.contains($0) }) { return false }
-                
+
         return true
       }
-            
+
       await MainActor.run {
         self.availableWindows = windows
         self.isRefreshing = false
@@ -140,48 +142,70 @@ class WindowCaptureManager: ObservableObject {
       }
     }
   }
-    
+
   func startCapture(for window: SCWindow, streamOutput: CaptureStreamOutput) async throws {
-    guard !isCapturing else { return }
-        
+    // If already capturing, stop the existing capture first
+    if isCapturing {
+      await stopCapture()
+      // Small delay to ensure cleanup completes
+      try await Task.sleep(nanoseconds: 100_000_000)  // 0.1 seconds
+    }
+
     selectedWindow = window
     self.streamOutput = streamOutput
-        
+
     // Create content filter for the specific window
     let filter = SCContentFilter(desktopIndependentWindow: window)
-        
+
     // Configure stream
     let streamConfig = SCStreamConfiguration()
     streamConfig.width = Int(window.frame.width)
     streamConfig.height = Int(window.frame.height)
-    streamConfig.minimumFrameInterval = CMTime(value: 1, timescale: 30) // 30 FPS
+    streamConfig.minimumFrameInterval = CMTime(value: 1, timescale: 30)  // 30 FPS
     streamConfig.queueDepth = 5
     streamConfig.pixelFormat = kCVPixelFormatType_32BGRA
     streamConfig.showsCursor = true
     streamConfig.capturesAudio = false
-        
+
     // Create stream
     stream = SCStream(filter: filter, configuration: streamConfig, delegate: nil)
-        
+
     // Add stream output
     try stream?.addStreamOutput(streamOutput, type: .screen, sampleHandlerQueue: .main)
-        
+
     // Start capture
     try await stream?.startCapture()
     isCapturing = true
   }
-    
+
   func stopCapture() async {
     guard isCapturing else { return }
-        
+
     do {
+      // First stop the capture
       try await stream?.stopCapture()
+
+      // Deactivate the stream output
+      streamOutput?.deactivate()
+
+      // Remove the stream output before clearing references
+      if let stream = stream, let output = streamOutput {
+        try stream.removeStreamOutput(output, type: .screen)
+      }
+
+      // Clear all references
       stream = nil
       streamOutput = nil
       isCapturing = false
       selectedWindow = nil
     } catch {
       print("Error stopping capture: \(error)")
+      // Even if there's an error, deactivate and clear the references
+      streamOutput?.deactivate()
+      stream = nil
+      streamOutput = nil
+      isCapturing = false
+      selectedWindow = nil
     }
   }
 }
@@ -189,24 +213,41 @@ class WindowCaptureManager: ObservableObject {
 // Stream output handler
 class CaptureStreamOutput: NSObject, SCStreamOutput, ObservableObject {
   @Published var latestFrame: CGImage?
-    
-  func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
-    guard type == .screen,
-          let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-        
+  private var isActive = true
+
+  func stream(
+    _ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer,
+    of type: SCStreamOutputType
+  ) {
+    guard isActive,
+      type == .screen,
+      let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+    else { return }
+
     // Create CGImage from the sample buffer
     let ciImage = CIImage(cvPixelBuffer: imageBuffer)
     let context = CIContext()
-        
+
     if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
       Task { @MainActor in
-        self.latestFrame = cgImage
+        if self.isActive {
+          self.latestFrame = cgImage
+        }
       }
     }
   }
-    
+
   func stream(_ stream: SCStream, didStopWithError error: Error) {
     print("Stream stopped with error: \(error)")
+    Task { @MainActor in
+      self.isActive = false
+      self.latestFrame = nil
+    }
+  }
+
+  func deactivate() {
+    isActive = false
+    latestFrame = nil
   }
 }
 
@@ -214,15 +255,16 @@ class CaptureStreamOutput: NSObject, SCStreamOutput, ObservableObject {
 extension SCWindow {
   var displayName: String {
     if let appName = owningApplication?.applicationName,
-       let windowTitle = title
+      let windowTitle = title
     {
       return "\(appName) - \(windowTitle)"
     }
     return title ?? "Unknown Window"
   }
-    
+
   var appIcon: NSImage? {
     guard let bundleID = owningApplication?.bundleIdentifier else { return nil }
-    return NSWorkspace.shared.icon(forFile: NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID)?.path ?? "")
+    return NSWorkspace.shared.icon(
+      forFile: NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID)?.path ?? "")
   }
 }

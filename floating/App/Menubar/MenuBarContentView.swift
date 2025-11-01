@@ -1,0 +1,226 @@
+//
+//  MenuBarContentView.swift
+//  floating
+//
+//  Created by Alexandru Turcanu on 11/1/25.
+//
+
+import ScreenCaptureKit
+import SwiftUI
+
+struct MenuBarContentView: View {
+  @Environment(PiPWindowManager.self) private var pipManager
+  @Environment(\.dismiss) private var dismiss
+  
+  @State private var captureManager = WindowCaptureManager()
+  @State private var windowSelector = WindowSelector()
+  @State private var isSelectingWindow = false
+
+  var body: some View {
+    VStack(spacing: 0) {
+      // Header
+      HStack {
+        Text("Floating PiP")
+          .font(.headline)
+        Spacer()
+      }
+      .padding()
+
+      Divider()
+
+      if !captureManager.hasPermission {
+        // Permission request view
+        ContentUnavailableView {
+          Label("Screen Recording Permission Required", systemImage: "exclamationmark.triangle.fill")
+            .labelStyle(.titleAndIcon)
+            .foregroundColor(.yellow)
+        } description: {
+          Text("Grant permission to mirror windows")
+        } actions: {
+          Button(action: {
+            Task {
+              await captureManager.requestPermission()
+            }
+          }) {
+            Text("Grant Permission")
+              .frame(maxWidth: .infinity)
+          }
+          .controlSize(.regular)
+          .buttonStyle(.borderedProminent)
+        }
+        .frame(width: 300)
+      } else {
+        // Main interface
+        VStack(spacing: 0) {
+          // Quick select button
+          Button(action: selectWindowByClick) {
+            HStack {
+              Image(systemName: "cursorarrow.click")
+              Text("Click to Select Window")
+              Spacer()
+            }
+            .contentShape(Rectangle())
+            .padding(.horizontal)
+            .padding(.vertical, 10)
+          }
+          .buttonStyle(.plain)
+          .background(Color.accentColor.opacity(isSelectingWindow ? 0.2 : 0))
+          .disabled(isSelectingWindow)
+
+          Divider()
+
+          // Window list
+          ScrollView {
+            VStack(spacing: 2) {
+              if captureManager.isRefreshing {
+                HStack {
+                  ProgressView()
+                    .scaleEffect(0.8)
+                  Text("Loading windows...")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)
+              } else if captureManager.availableWindows.isEmpty {
+                Text("No windows available")
+                  .font(.caption)
+                  .foregroundColor(.secondary)
+                  .frame(maxWidth: .infinity)
+                  .padding(.vertical, 20)
+              } else {
+                ForEach(captureManager.availableWindows, id: \.windowID) { window in
+                  MenuBarWindowRow(window: window) {
+                    pipManager.createPiPWindow(for: window, captureManager: captureManager)
+                    dismiss()
+                  }
+                }
+              }
+            }
+            .padding(.vertical, 4)
+          }
+          .frame(maxHeight: 300)
+
+          Divider()
+
+          // Bottom actions
+          HStack {
+            Button(action: {
+              Task {
+                await captureManager.refreshWindows()
+              }
+            }) {
+              Image(systemName: "arrow.clockwise")
+                .help("Refresh window list")
+            }
+            .buttonStyle(.plain)
+            .disabled(captureManager.isRefreshing)
+
+            Spacer()
+
+            if !pipManager.windowControllers.isEmpty {
+              Button(action: {
+                pipManager.closeAllWindows()
+              }) {
+                Text("Close All PiP")
+                  .font(.caption)
+              }
+              .buttonStyle(.link)
+            }
+
+            Button(action: {
+              NSApplication.shared.terminate(nil)
+            }) {
+              Text("Quit")
+                .font(.caption)
+            }
+            .buttonStyle(.link)
+          }
+          .padding(.horizontal)
+          .padding(.vertical, 8)
+        }
+        .frame(width: 320)
+      }
+    }
+    .task {
+      await captureManager.checkPermission()
+      if captureManager.hasPermission {
+        await captureManager.refreshWindows()
+      }
+    }
+  }
+
+  private func selectWindowByClick() {
+    Task {
+      isSelectingWindow = true
+      dismiss()
+
+      // Small delay to allow popover to close
+      try? await Task.sleep(nanoseconds: 200_000_000)
+
+      if let selectedWindow = await windowSelector.selectWindow(
+        from: captureManager.availableWindows)
+      {
+        pipManager.createPiPWindow(for: selectedWindow, captureManager: captureManager)
+      }
+      isSelectingWindow = false
+    }
+  }
+}
+
+struct MenuBarWindowRow: View {
+  let window: SCWindow
+  let action: () -> Void
+
+  var body: some View {
+    Button(action: action) {
+      HStack(spacing: 8) {
+        // App icon
+        if let icon = window.appIcon {
+          Image(nsImage: icon)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 20, height: 20)
+        } else {
+          Image(systemName: "app.dashed")
+            .font(.system(size: 14))
+            .frame(width: 20, height: 20)
+        }
+
+        // Window info
+        VStack(alignment: .leading, spacing: 2) {
+          Text(window.displayName)
+            .font(.caption)
+            .lineLimit(1)
+            .foregroundColor(.primary)
+
+          if let app = window.owningApplication?.applicationName {
+            Text(app)
+              .font(.caption2)
+              .foregroundColor(.secondary)
+          }
+        }
+
+        Spacer()
+      }
+      .contentShape(Rectangle())
+      .padding(.horizontal, 12)
+      .padding(.vertical, 6)
+    }
+    .buttonStyle(.plain)
+    .background(Color.gray.opacity(0.0001))
+    .onHover { hovering in
+      if hovering {
+        NSCursor.pointingHand.push()
+      } else {
+        NSCursor.pop()
+      }
+    }
+  }
+}
+
+// Preview
+#Preview("Menu Bar Content") {
+  MenuBarContentView()
+    .environment(PiPWindowManager())
+}
