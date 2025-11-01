@@ -11,7 +11,7 @@ import SwiftUI
 struct MenuBarContentView: View {
   @Environment(PiPWindowManager.self) private var pipManager
   @Environment(\.dismiss) private var dismiss
-  
+
   @State private var captureManager = WindowCaptureManager()
   @State private var windowSelector = WindowSelector()
   @State private var isSelectingWindow = false
@@ -22,6 +22,7 @@ struct MenuBarContentView: View {
       HStack {
         Text("Floating PiP")
           .font(.headline)
+          .fontWeight(.semibold)
         Spacer()
       }
       .padding()
@@ -29,26 +30,28 @@ struct MenuBarContentView: View {
       Divider()
 
       if !captureManager.hasPermission {
-        // Permission request view
-        ContentUnavailableView {
-          Label("Screen Recording Permission Required", systemImage: "exclamationmark.triangle.fill")
-            .labelStyle(.titleAndIcon)
-            .foregroundColor(.yellow)
-        } description: {
-          Text("Grant permission to mirror windows")
-        } actions: {
-          Button(action: {
+        VStack(spacing: 12) {
+          Text("Enable Screen Capture Access")
+            .font(.headline)
+            .fontWeight(.semibold)
+          Text("We use Screen Capture to mirror windows for picture-in-picture mode.")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+            .padding(.bottom, 12)
+
+          Button {
             Task {
               await captureManager.requestPermission()
             }
-          }) {
-            Text("Grant Permission")
-              .frame(maxWidth: .infinity)
+          } label: {
+            Text("Enable")
           }
-          .controlSize(.regular)
           .buttonStyle(.borderedProminent)
+          .controlSize(.large)
+          .buttonSizing(.flexible)
         }
-        .frame(width: 300)
+        .padding()
       } else {
         // Main interface
         VStack(spacing: 0) {
