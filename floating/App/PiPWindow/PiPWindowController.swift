@@ -12,14 +12,12 @@ import ScreenCaptureKit
 import SwiftUI
 
 class PiPWindowController: NSWindowController {
-  private var streamOutput: CaptureStreamOutput
-  private var captureManager: WindowCaptureManager
+  private var manager: PiPManager
   private var targetWindow: SCWindow
 
-  init(window: SCWindow, captureManager: WindowCaptureManager) {
+  init(window: SCWindow, manager: PiPManager) {
     self.targetWindow = window
-    self.captureManager = captureManager
-    self.streamOutput = CaptureStreamOutput()
+    self.manager = manager
 
     // Calculate initial window size (quarter of original window)
     let pipWidth = min(window.frame.width / 2, 600)
@@ -41,7 +39,7 @@ class PiPWindowController: NSWindowController {
     // Start capturing
     Task {
       do {
-        try await captureManager.startCapture(for: window, streamOutput: streamOutput)
+        try await manager.startCapture(for: window)
       } catch {
         print("Failed to start capture: \(error)")
         self.close()
@@ -81,7 +79,7 @@ class PiPWindowController: NSWindowController {
     guard let window = self.window else { return }
 
     // Create the content view
-    let contentView = CaptureStreamView(streamOutput: streamOutput)
+    let contentView = PiPWindowView(manager: manager)
     let hostingView = NSHostingView(rootView: contentView)
 
     window.contentView = hostingView
@@ -90,54 +88,9 @@ class PiPWindowController: NSWindowController {
 
   override func close() {
     // Clean up capture when window closes
-    Task { [weak captureManager, weak streamOutput] in
-      await captureManager?.stopCapture()
-
-      // Deactivate the stream output to ensure no more frames are processed
-      streamOutput?.deactivate()
+    Task { [weak manager] in
+      await manager?.stopCapture()
     }
     super.close()
-  }
-}
-
-// Manager for all PiP windows
-@Observable
-class PiPWindowManager {
-  var windowControllers: [PiPWindowController] = []
-
-  func createPiPWindow(for window: SCWindow, captureManager: WindowCaptureManager) {
-    // Check if we already have a PiP window for this source
-    let existingController = windowControllers.first { controller in
-      controller.window?.title.contains(window.displayName) ?? false
-    }
-
-    if let existingController = existingController {
-      // Bring existing window to front
-      existingController.window?.makeKeyAndOrderFront(nil)
-      return
-    }
-
-    // Create new PiP window
-    let controller = PiPWindowController(window: window, captureManager: captureManager)
-    windowControllers.append(controller)
-
-    // Show the window
-    controller.showWindow(nil)
-
-    // Remove controller when window closes
-    NotificationCenter.default.addObserver(
-      forName: NSWindow.willCloseNotification,
-      object: controller.window,
-      queue: .main
-    ) { [weak self] _ in
-      Task { @MainActor [weak self] in
-        self?.windowControllers.removeAll { $0 === controller }
-      }
-    }
-  }
-
-  func closeAllWindows() {
-    windowControllers.forEach { $0.close() }
-    windowControllers.removeAll()
   }
 }

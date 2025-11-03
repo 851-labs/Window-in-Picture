@@ -9,10 +9,9 @@ import ScreenCaptureKit
 import SwiftUI
 
 struct MenuBarContentView: View {
-  @Environment(PiPWindowManager.self) private var pipManager
+  @Environment(PiPManager.self) private var pipManager
   @Environment(\.dismiss) private var dismiss
 
-  @State private var captureManager = WindowCaptureManager()
   @State private var windowSelector = WindowSelector()
   @State private var isSelectingWindow = false
 
@@ -29,7 +28,7 @@ struct MenuBarContentView: View {
 
       Divider()
 
-      if !captureManager.hasPermission {
+      if !pipManager.hasPermission {
         VStack(spacing: 12) {
           Text("Enable Screen Capture Access")
             .font(.headline)
@@ -42,7 +41,7 @@ struct MenuBarContentView: View {
 
           Button {
             Task {
-              await captureManager.requestPermission()
+              await pipManager.requestPermission()
             }
           } label: {
             Text("Enable")
@@ -75,7 +74,7 @@ struct MenuBarContentView: View {
           // Window list
           ScrollView {
             VStack(spacing: 2) {
-              if captureManager.isRefreshing {
+              if pipManager.isRefreshing {
                 HStack {
                   ProgressView()
                     .scaleEffect(0.8)
@@ -85,16 +84,16 @@ struct MenuBarContentView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
-              } else if captureManager.availableWindows.isEmpty {
+              } else if pipManager.availableWindows.isEmpty {
                 Text("No windows available")
                   .font(.caption)
                   .foregroundColor(.secondary)
                   .frame(maxWidth: .infinity)
                   .padding(.vertical, 20)
               } else {
-                ForEach(captureManager.availableWindows, id: \.windowID) { window in
+                ForEach(pipManager.availableWindows, id: \.windowID) { window in
                   MenuBarWindowRow(window: window) {
-                    pipManager.createPiPWindow(for: window, captureManager: captureManager)
+                    pipManager.createPiPWindow(for: window)
                     dismiss()
                   }
                 }
@@ -110,14 +109,14 @@ struct MenuBarContentView: View {
           HStack {
             Button(action: {
               Task {
-                await captureManager.refreshWindows()
+                await pipManager.refreshWindows()
               }
             }) {
               Image(systemName: "arrow.clockwise")
                 .help("Refresh window list")
             }
             .buttonStyle(.plain)
-            .disabled(captureManager.isRefreshing)
+            .disabled(pipManager.isRefreshing)
 
             Spacer()
 
@@ -146,9 +145,9 @@ struct MenuBarContentView: View {
       }
     }
     .task {
-      await captureManager.checkPermission()
-      if captureManager.hasPermission {
-        await captureManager.refreshWindows()
+      await pipManager.checkPermission()
+      if pipManager.hasPermission {
+        await pipManager.refreshWindows()
       }
     }
   }
@@ -162,9 +161,9 @@ struct MenuBarContentView: View {
       try? await Task.sleep(nanoseconds: 200_000_000)
 
       if let selectedWindow = await windowSelector.selectWindow(
-        from: captureManager.availableWindows)
+        from: pipManager.availableWindows)
       {
-        pipManager.createPiPWindow(for: selectedWindow, captureManager: captureManager)
+        pipManager.createPiPWindow(for: selectedWindow)
       }
       isSelectingWindow = false
     }
@@ -225,5 +224,5 @@ struct MenuBarWindowRow: View {
 // Preview
 #Preview("Menu Bar Content") {
   MenuBarContentView()
-    .environment(PiPWindowManager())
+    .environment(PiPManager())
 }

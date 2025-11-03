@@ -1,5 +1,5 @@
 //
-//  CaptureStreamView.swift
+//  PiPWindowView.swift
 //  floating
 //
 //  Created by Alexandru Turcanu on 10/22/25.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct CaptureStreamView: View {
-  @Bindable var streamOutput: CaptureStreamOutput
+struct PiPWindowView: View {
+  @Bindable var manager: PiPManager
   @State private var image: NSImage?
 
   var body: some View {
@@ -36,7 +36,7 @@ struct CaptureStreamView: View {
         }
       }
     }
-    .onChange(of: streamOutput.latestFrame) { _, newValue in
+    .onChange(of: manager.latestFrame) { _, newValue in
       if let cgImage = newValue {
         self.image = NSImage(
           cgImage: cgImage, size: NSSize(width: cgImage.width, height: cgImage.height))
@@ -46,7 +46,7 @@ struct CaptureStreamView: View {
 }
 
 // Preview
-#Preview("Capture Stream View") {
-  CaptureStreamView(streamOutput: CaptureStreamOutput())
+#Preview("PiP Window View") {
+  PiPWindowView(manager: PiPManager())
     .frame(width: 400, height: 300)
 }

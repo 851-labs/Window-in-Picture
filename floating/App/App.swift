@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct floatingApp: App {
-  @State private var pipManager = PiPWindowManager()
+  @State private var pipManager = PiPManager()
 
   var body: some Scene {
     MenuBarExtra("Floating PiP", systemImage: "pip.enter") {
