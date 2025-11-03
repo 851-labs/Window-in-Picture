@@ -35,22 +35,22 @@ class WindowSelectorOverlay: NSWindow {
   }
 
   func startSelection(windows: [SCWindow], completion: @escaping (SCWindow?) -> Void) {
-    self.availableWindows = windows
+    availableWindows = windows
     self.completion = completion
 
     // Show overlay
-    self.makeKeyAndOrderFront(nil)
+    makeKeyAndOrderFront(nil)
 
     // Start monitoring mouse events
     eventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) {
       [weak self] event in
       self?.handleMouseEvent(event)
-      return nil  // Consume the event
+      return nil // Consume the event
     }
 
     // Also monitor for escape key
     NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
-      if event.keyCode == 53 {  // Escape key
+      if event.keyCode == 53 { // Escape key
         self?.cancelSelection()
         return nil
       }
@@ -60,7 +60,7 @@ class WindowSelectorOverlay: NSWindow {
 
   private func handleMouseEvent(_ event: NSEvent) {
     let clickLocation = event.locationInWindow
-    let screenLocation = self.convertPoint(toScreen: clickLocation)
+    let screenLocation = convertPoint(toScreen: clickLocation)
 
     // Find window at click location
     if let selectedWindow = findWindow(at: screenLocation) {
@@ -90,7 +90,7 @@ class WindowSelectorOverlay: NSWindow {
     if let monitor = eventMonitor {
       NSEvent.removeMonitor(monitor)
     }
-    self.orderOut(nil)
+    orderOut(nil)
   }
 }
 

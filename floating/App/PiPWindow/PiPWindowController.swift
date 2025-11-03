@@ -47,16 +47,17 @@ class PiPWindowController: NSWindowController {
     }
   }
 
+  @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
   private func setupWindow() {
-    guard let window = self.window else { return }
+    guard let window = window else { return }
 
     // Configure window properties
     window.title = "PiP: \(targetWindow.displayName)"
-    window.level = .floating  // Always on top
+    window.level = .floating // Always on top
     window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
     window.isMovableByWindowBackground = true
     window.titlebarAppearsTransparent = false
@@ -76,7 +77,7 @@ class PiPWindowController: NSWindowController {
   }
 
   private func setupContent() {
-    guard let window = self.window else { return }
+    guard let window = window else { return }
 
     // Create the content view
     let contentView = PiPWindowView(manager: manager)

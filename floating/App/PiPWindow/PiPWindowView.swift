@@ -39,7 +39,8 @@ struct PiPWindowView: View {
     .onChange(of: manager.latestFrame) { _, newValue in
       if let cgImage = newValue {
         self.image = NSImage(
-          cgImage: cgImage, size: NSSize(width: cgImage.width, height: cgImage.height))
+          cgImage: cgImage, size: NSSize(width: cgImage.width, height: cgImage.height)
+        )
       }
     }
   }
