@@ -5,11 +5,10 @@
 //  Created by Alexandru Turcanu on 10/22/25.
 //
 
-import Combine
 import SwiftUI
 
 struct CaptureStreamView: View {
-  @ObservedObject var streamOutput: CaptureStreamOutput
+  @Bindable var streamOutput: CaptureStreamOutput
   @State private var image: NSImage?
 
   var body: some View {
@@ -37,8 +36,8 @@ struct CaptureStreamView: View {
         }
       }
     }
-    .onReceive(streamOutput.$latestFrame) { cgImage in
-      if let cgImage = cgImage {
+    .onChange(of: streamOutput.latestFrame) { _, newValue in
+      if let cgImage = newValue {
         self.image = NSImage(
           cgImage: cgImage, size: NSSize(width: cgImage.width, height: cgImage.height))
       }

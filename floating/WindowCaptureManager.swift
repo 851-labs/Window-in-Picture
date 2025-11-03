@@ -211,8 +211,9 @@ class WindowCaptureManager {
 }
 
 // Stream output handler
-class CaptureStreamOutput: NSObject, SCStreamOutput, ObservableObject {
-  @Published var latestFrame: CGImage?
+@Observable
+class CaptureStreamOutput: NSObject, SCStreamOutput {
+  var latestFrame: CGImage?
   private var isActive = true
 
   func stream(
