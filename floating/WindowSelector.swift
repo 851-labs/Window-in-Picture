@@ -5,8 +5,6 @@
 //  Created by Alexandru Turcanu on 10/22/25.
 //
 
-import AppKit
-import Combine
 import ScreenCaptureKit
 import SwiftUI
 

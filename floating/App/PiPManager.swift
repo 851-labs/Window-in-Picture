@@ -5,10 +5,6 @@
 //  Created by Alexandru Turcanu on 10/22/25.
 //
 
-import AppKit
-import Combine
-import Foundation
-import Observation
 import ScreenCaptureKit
 import SwiftUI
 
@@ -47,14 +43,10 @@ class PiPManager: NSObject {
     do {
       // Try to get shareable content to check if we have permission
       _ = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
-      await MainActor.run {
-        self.hasPermission = true
-      }
+      hasPermission = true
     } catch {
       print("Error checking screen recording permission: \(error)")
-      await MainActor.run {
-        self.hasPermission = false
-      }
+      hasPermission = false
     }
   }
 
@@ -70,9 +62,7 @@ class PiPManager: NSObject {
   // MARK: - Window Discovery
 
   func refreshWindows() async {
-    await MainActor.run {
-      isRefreshing = true
-    }
+    isRefreshing = true
 
     do {
       let content = try await SCShareableContent.excludingDesktopWindows(
@@ -91,8 +81,8 @@ class PiPManager: NSObject {
         let bundleID = app.bundleIdentifier
         if bundleID == Bundle.main.bundleIdentifier { return false }
 
-        // Filter out system UI and menubar apps
-        let excludedBundleIDs = [
+        // Filter out system UI and menubar apps by bundle ID
+        if [
           "com.apple.controlcenter",
           "com.apple.notificationcenterui",
           "com.apple.systemuiserver",
@@ -106,54 +96,29 @@ class PiPManager: NSObject {
           "com.apple.AirPlayUIAgent",
           "com.apple.WiFiAgent",
           "com.apple.BluetoothUIService",
-        ]
-
-        if excludedBundleIDs.contains(bundleID) { return false }
-
-        // Filter out menubar apps (they typically have no proper window title or specific patterns)
-        let excludedAppNames = [
-          "Control Center",
-          "Notification Center",
-          "Screenshot",
-          "Window Server",
-          "SystemUIServer",
-          "Dock",
-          "Spotlight",
-          "Siri",
-        ]
-
-        // Also check for common menubar app patterns in bundle IDs
-        let menubarPatterns = ["statusitem", "menubar", "agent", "helper", "menu"]
-        if menubarPatterns.contains(where: { bundleID.lowercased().contains($0) }) {
-          // But allow some legitimate apps that might have these terms
-          let allowedBundleIDs = ["com.apple.TextEdit", "com.microsoft.VSCode"]
-          if !allowedBundleIDs.contains(bundleID) {
-            return false
-          }
+        ].contains(bundleID) {
+          return false
         }
 
-        if excludedAppNames.contains(app.applicationName) { return false }
-
-        // Filter out windows that look like menubar popups or system windows
-        // These often have very small heights or specific frame characteristics
-        if window.frame.height < 50 && window.frame.width < 300 { return false }
-
-        // Filter out windows with generic system-like titles
-        let excludedTitles = ["Item-0", "Focus", "Menubar", "Menu Bar"]
-        if excludedTitles.contains(where: { title.contains($0) }) { return false }
+        // For apps without bundle IDs, filter by window title
+        if bundleID.isEmpty && [
+          "underbelly",
+          "Display 1 Backstop",
+          "Menubar",
+          "StatusIndicator",
+          "Cursor", // This is the empty bundle ID Cursor window, not the actual Cursor editor
+        ].contains(where: { title.contains($0) }) {
+          return false
+        }
 
         return true
       }
 
-      await MainActor.run {
-        self.availableWindows = windows
-        self.isRefreshing = false
-      }
+      availableWindows = windows
+      isRefreshing = false
     } catch {
       print("Error getting available windows: \(error)")
-      await MainActor.run {
-        self.isRefreshing = false
-      }
+      isRefreshing = false
     }
   }
 

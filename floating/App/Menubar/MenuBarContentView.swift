@@ -5,6 +5,7 @@
 //  Created by Alexandru Turcanu on 11/1/25.
 //
 
+import AppKit
 import ScreenCaptureKit
 import SwiftUI
 
@@ -211,12 +212,48 @@ struct MenuBarWindowRow: View {
     }
     .buttonStyle(.plain)
     .background(Color.gray.opacity(0.0001))
-    .onHover { hovering in
-      if hovering {
-        NSCursor.pointingHand.push()
-      } else {
-        NSCursor.pop()
-      }
+    .contextMenu {
+      #if DEBUG
+        Menu("Debug", systemImage: "ant") {
+          if let appName = window.owningApplication?.applicationName {
+            Section("App") {
+              Button(appName, systemImage: "app.grid") {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(appName, forType: .string)
+              }
+            }
+          }
+
+          if let bundleID = window.owningApplication?.bundleIdentifier {
+            Section("Bundle") {
+              Button(bundleID, systemImage: "tag") {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(bundleID, forType: .string)
+              }
+            }
+          }
+
+          if let title = window.title {
+            Section("Window") {
+              Button(title, systemImage: "macwindow") {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(title, forType: .string)
+              }
+            }
+          }
+
+          Divider()
+
+          Button("Copy All Info", systemImage: "doc.on.doc") {
+            let appName = window.owningApplication?.applicationName ?? "Unknown"
+            let bundleID = window.owningApplication?.bundleIdentifier ?? "No Bundle ID"
+            let title = window.title ?? "No Title"
+            let info = "App: \(appName)\nBundle ID: \(bundleID)\nWindow: \(title)"
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(info, forType: .string)
+          }
+        }
+      #endif
     }
   }
 }
