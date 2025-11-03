@@ -71,15 +71,19 @@ class PiPManager: NSObject {
       )
 
       let windows = content.windows.filter { window in
-        guard let app = window.owningApplication,
-              let title = window.title,
-              !title.isEmpty,
-              window.isOnScreen
-        else { return false }
+        guard
+          let app = window.owningApplication,
+          let title = window.title,
+          title.isEmpty == false
+        else {
+          return false
+        }
 
         // Filter out our own app
         let bundleID = app.bundleIdentifier
-        if bundleID == Bundle.main.bundleIdentifier { return false }
+        if bundleID == Bundle.main.bundleIdentifier {
+          return false
+        }
 
         // Filter out system UI and menubar apps by bundle ID
         if [
@@ -96,18 +100,25 @@ class PiPManager: NSObject {
           "com.apple.AirPlayUIAgent",
           "com.apple.WiFiAgent",
           "com.apple.BluetoothUIService",
+          "com.apple.wallpaper.agent",
+          "com.apple.AccessibilityUIServer",
+          "com.apple.Spotlight",
         ].contains(bundleID) {
           return false
         }
 
         // For apps without bundle IDs, filter by window title
-        if bundleID.isEmpty && [
-          "underbelly",
-          "Display 1 Backstop",
-          "Menubar",
-          "StatusIndicator",
-          "Cursor", // This is the empty bundle ID Cursor window, not the actual Cursor editor
-        ].contains(where: { title.contains($0) }) {
+        if bundleID.isEmpty
+          && [
+            "underbelly",
+            "Display 1 Backstop",
+            "Menubar",
+            "StatusIndicator",
+            "Cursor",  // This is the empty bundle ID Cursor window, not the actual Cursor editor
+            "System Status Item Clone",
+            "Packages Display",
+          ].contains(where: { title.contains($0) })
+        {
           return false
         }
 
@@ -167,7 +178,7 @@ class PiPManager: NSObject {
     if isCapturing {
       await stopCapture()
       // Small delay to ensure cleanup completes
-      try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+      try await Task.sleep(nanoseconds: 100_000_000)  // 0.1 seconds
     }
 
     selectedWindow = window
@@ -180,11 +191,13 @@ class PiPManager: NSObject {
     let streamConfig = SCStreamConfiguration()
     streamConfig.width = Int(window.frame.width)
     streamConfig.height = Int(window.frame.height)
-    streamConfig.minimumFrameInterval = CMTime(value: 1, timescale: 30) // 30 FPS
-    streamConfig.queueDepth = 5
-    streamConfig.pixelFormat = kCVPixelFormatType_32BGRA
-    streamConfig.showsCursor = true
+
+    streamConfig.showsCursor = false
     streamConfig.capturesAudio = false
+
+    streamConfig.ignoreShadowsDisplay = true
+    streamConfig.ignoreGlobalClipDisplay = true
+    streamConfig.ignoreGlobalClipSingleWindow = true
 
     // Create stream
     stream = SCStream(filter: filter, configuration: streamConfig, delegate: nil)
@@ -237,8 +250,8 @@ extension PiPManager: SCStreamOutput {
     of type: SCStreamOutputType
   ) {
     guard isStreamActive,
-          type == .screen,
-          let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+      type == .screen,
+      let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
     else { return }
 
     // Create CGImage from the sample buffer

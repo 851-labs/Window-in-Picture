@@ -18,7 +18,7 @@ extension SCWindow {
     }
     return title ?? "Unknown Window"
   }
-  
+
   var appIcon: NSImage? {
     guard let bundleID = owningApplication?.bundleIdentifier else { return nil }
     return NSWorkspace.shared.icon(
