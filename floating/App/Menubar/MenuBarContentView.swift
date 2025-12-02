@@ -13,7 +13,6 @@ struct MenuBarContentView: View {
   @Environment(PiPManager.self) private var pipManager
   @Environment(\.dismiss) private var dismiss
 
-  @State private var windowSelector = WindowSelector()
   @State private var isSelectingWindow = false
 
   var body: some View {
@@ -161,15 +160,7 @@ struct MenuBarContentView: View {
       // Small delay to allow popover to close
       try? await Task.sleep(nanoseconds: 200_000_000)
 
-      if let filter = await windowSelector.selectContent() {
-        // Get display name and size from the filter's content rect
-        let displayName = "Selected Window"
-        let size = NSSize(
-          width: filter.contentRect.width,
-          height: filter.contentRect.height
-        )
-        pipManager.createPiPWindow(with: filter, displayName: displayName, size: size)
-      }
+      await pipManager.presentWindowPicker()
       isSelectingWindow = false
     }
   }

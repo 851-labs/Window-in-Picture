@@ -9,7 +9,7 @@ import ScreenCaptureKit
 import SwiftUI
 
 @Observable
-class PiPManager: NSObject {
+class PiPManager: NSObject, SCContentSharingPickerObserver {
   // Window discovery and permissions
   var availableWindows: [SCWindow] = []
   var hasPermission = false
@@ -27,14 +27,23 @@ class PiPManager: NSObject {
   // PiP window management
   var windowControllers: [PiPWindowController] = []
 
+  // Native window picker
+  private let picker = SCContentSharingPicker.shared
+  private var pickerContinuation: CheckedContinuation<SCContentFilter?, Never>?
+
   override init() {
     super.init()
+    picker.add(self)
     Task {
       await checkPermission()
       if hasPermission {
         await refreshWindows()
       }
     }
+  }
+
+  deinit {
+    picker.remove(self)
   }
 
   // MARK: - Permissions
@@ -130,6 +139,64 @@ class PiPManager: NSObject {
     } catch {
       print("Error getting available windows: \(error)")
       isRefreshing = false
+    }
+  }
+
+  // MARK: - Native Window Picker
+
+  /// Present the native window picker and create a PiP window for the selection
+  func presentWindowPicker() async {
+    // Configure picker to exclude our own app
+    var config = SCContentSharingPickerConfiguration()
+    config.excludedBundleIDs = [Bundle.main.bundleIdentifier].compactMap { $0 }
+    config.allowedPickerModes = [.singleWindow]
+    picker.defaultConfiguration = config
+
+    picker.isActive = true
+
+    let filter = await withCheckedContinuation { continuation in
+      self.pickerContinuation = continuation
+      picker.present()
+    }
+
+    // Create PiP window if user selected something
+    if let filter = filter {
+      let size = NSSize(
+        width: filter.contentRect.width,
+        height: filter.contentRect.height
+      )
+      createPiPWindow(with: filter, displayName: "Selected Window", size: size)
+    }
+  }
+
+  // MARK: - SCContentSharingPickerObserver
+
+  nonisolated func contentSharingPicker(
+    _ picker: SCContentSharingPicker,
+    didUpdateWith filter: SCContentFilter,
+    for stream: SCStream?
+  ) {
+    Task { @MainActor in
+      pickerContinuation?.resume(returning: filter)
+      pickerContinuation = nil
+      picker.isActive = false
+    }
+  }
+
+  nonisolated func contentSharingPicker(_ picker: SCContentSharingPicker, didCancelFor stream: SCStream?) {
+    Task { @MainActor in
+      pickerContinuation?.resume(returning: nil)
+      pickerContinuation = nil
+      picker.isActive = false
+    }
+  }
+
+  nonisolated func contentSharingPickerStartDidFailWithError(_ error: Error) {
+    Task { @MainActor in
+      print("Content sharing picker failed to start: \(error)")
+      pickerContinuation?.resume(returning: nil)
+      pickerContinuation = nil
+      picker.isActive = false
     }
   }
 
