@@ -161,12 +161,31 @@ class PiPManager: NSObject, SCContentSharingPickerObserver {
 
     // Create PiP window if user selected something
     if let filter = filter {
+      // Try to find matching window, fall back to unique identifier
+      let displayName = await findMatchingWindowDisplayName(for: filter)
+        ?? "Window - \(UUID().uuidString.prefix(8))"
+
       let size = NSSize(
         width: filter.contentRect.width,
         height: filter.contentRect.height
       )
-      createPiPWindow(with: filter, displayName: "Selected Window", size: size)
+      createPiPWindow(with: filter, displayName: displayName, size: size)
     }
+  }
+
+  /// Try to find a matching window for the given filter by comparing frames
+  private func findMatchingWindowDisplayName(for filter: SCContentFilter) async -> String? {
+    // Refresh windows to get current state for matching
+    await refreshWindows()
+
+    let filterRect = filter.contentRect
+
+    for window in availableWindows {
+      if window.frame.equalTo(filterRect) {
+        return window.displayName
+      }
+    }
+    return nil
   }
 
   // MARK: - SCContentSharingPickerObserver
