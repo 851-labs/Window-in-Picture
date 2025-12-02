@@ -8,7 +8,7 @@
 import ScreenCaptureKit
 import SwiftUI
 
-class PiPWindowController: NSWindowController {
+class PiPWindowController: NSWindowController, NSWindowDelegate {
   private var manager: PiPManager
   private var contentFilter: SCContentFilter
   private var displayName: String
@@ -43,6 +43,9 @@ class PiPWindowController: NSWindowController {
     )
 
     super.init(window: pipWindow)
+
+    // Set delegate to handle window close
+    pipWindow.delegate = self
 
     setupWindow()
     setupContent()
@@ -98,11 +101,14 @@ class PiPWindowController: NSWindowController {
     window.contentView?.wantsLayer = true
   }
 
-  override func close() {
-    // Clean up capture when window closes
-    Task { [weak manager] in
-      await manager?.stopCapture()
+  // MARK: - NSWindowDelegate
+
+  func windowWillClose(_ notification: Notification) {
+    // Stop capture when window closes
+    // Use detached task to ensure it runs even as window controller is being deallocated
+    let manager = self.manager
+    Task.detached { @MainActor in
+      await manager.stopCapture()
     }
-    super.close()
   }
 }

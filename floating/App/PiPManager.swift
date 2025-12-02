@@ -198,7 +198,6 @@ class PiPManager: NSObject, SCContentSharingPickerObserver {
     Task { @MainActor in
       pickerContinuation?.resume(returning: filter)
       pickerContinuation = nil
-      picker.isActive = false
     }
   }
 
@@ -347,6 +346,9 @@ class PiPManager: NSObject, SCContentSharingPickerObserver {
 
   func stopCapture() async {
     guard isCapturing else { return }
+
+    // Tell the system we're done sharing
+    picker.isActive = false
 
     do {
       // First stop the capture
