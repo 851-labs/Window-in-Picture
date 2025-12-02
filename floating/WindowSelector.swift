@@ -8,125 +8,65 @@
 import ScreenCaptureKit
 import SwiftUI
 
-class WindowSelectorOverlay: NSWindow {
-  private var eventMonitor: Any?
-  private var completion: ((SCWindow?) -> Void)?
-  private var availableWindows: [SCWindow] = []
+/// Window selector using macOS native SCContentSharingPicker
+@MainActor
+class WindowSelector: NSObject, SCContentSharingPickerObserver {
+  private var continuation: CheckedContinuation<SCContentFilter?, Never>?
+  private let picker = SCContentSharingPicker.shared
 
-  init() {
-    super.init(
-      contentRect: NSScreen.main?.frame ?? .zero,
-      styleMask: [.borderless],
-      backing: .buffered,
-      defer: false
-    )
-
-    self.isOpaque = false
-    self.backgroundColor = NSColor.black.withAlphaComponent(0.3)
-    self.level = .screenSaver
-    self.ignoresMouseEvents = false
-    self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-
-    // Create overlay view
-    let overlayView = WindowSelectorView()
-    self.contentView = NSHostingView(rootView: overlayView)
+  override init() {
+    super.init()
+    picker.add(self)
   }
 
-  func startSelection(windows: [SCWindow], completion: @escaping (SCWindow?) -> Void) {
-    availableWindows = windows
-    self.completion = completion
+  deinit {
+    picker.remove(self)
+  }
 
-    // Show overlay
-    makeKeyAndOrderFront(nil)
+  /// Present the native content sharing picker and return the selected content filter
+  func selectContent() async -> SCContentFilter? {
+    // Configure picker to exclude our own app
+    var config = SCContentSharingPickerConfiguration()
+    config.excludedBundleIDs = [Bundle.main.bundleIdentifier].compactMap { $0 }
+    config.allowedPickerModes = [.singleWindow]
+    picker.defaultConfiguration = config
 
-    // Start monitoring mouse events
-    eventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) {
-      [weak self] event in
-      self?.handleMouseEvent(event)
-      return nil // Consume the event
-    }
+    picker.isActive = true
 
-    // Also monitor for escape key
-    NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
-      if event.keyCode == 53 { // Escape key
-        self?.cancelSelection()
-        return nil
-      }
-      return event
+    return await withCheckedContinuation { continuation in
+      self.continuation = continuation
+      picker.present()
     }
   }
 
-  private func handleMouseEvent(_ event: NSEvent) {
-    let clickLocation = event.locationInWindow
-    let screenLocation = convertPoint(toScreen: clickLocation)
+  // MARK: - SCContentSharingPickerObserver
 
-    // Find window at click location
-    if let selectedWindow = findWindow(at: screenLocation) {
-      completion?(selectedWindow)
-    } else {
-      completion?(nil)
-    }
-
-    endSelection()
-  }
-
-  private func findWindow(at point: NSPoint) -> SCWindow? {
-    // Find the window that contains the clicked point
-    return availableWindows.first { window in
-      let frame = window.frame
-      return frame.contains(point)
+  nonisolated func contentSharingPicker(
+    _ picker: SCContentSharingPicker,
+    didUpdateWith filter: SCContentFilter,
+    for stream: SCStream?
+  ) {
+    Task { @MainActor in
+      continuation?.resume(returning: filter)
+      continuation = nil
+      picker.isActive = false
     }
   }
 
-  private func cancelSelection() {
-    completion?(nil)
-    endSelection()
-  }
-
-  private func endSelection() {
-    // Clean up
-    if let monitor = eventMonitor {
-      NSEvent.removeMonitor(monitor)
-    }
-    orderOut(nil)
-  }
-}
-
-struct WindowSelectorView: View {
-  var body: some View {
-    ZStack {
-      Color.clear
-
-      VStack {
-        Text("Click on a window to mirror it")
-          .font(.largeTitle)
-          .fontWeight(.bold)
-          .foregroundColor(.white)
-          .padding()
-          .background(Color.black.opacity(0.7))
-          .cornerRadius(10)
-
-        Text("Press ESC to cancel")
-          .font(.headline)
-          .foregroundColor(.white.opacity(0.8))
-          .padding(.top, 10)
-      }
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
+  nonisolated func contentSharingPicker(_ picker: SCContentSharingPicker, didCancelFor stream: SCStream?) {
+    Task { @MainActor in
+      continuation?.resume(returning: nil)
+      continuation = nil
+      picker.isActive = false
     }
   }
-}
 
-// Window selector manager
-class WindowSelector {
-  private var overlay: WindowSelectorOverlay?
-
-  func selectWindow(from windows: [SCWindow]) async -> SCWindow? {
-    await withCheckedContinuation { continuation in
-      overlay = WindowSelectorOverlay()
-      overlay?.startSelection(windows: windows) { selectedWindow in
-        continuation.resume(returning: selectedWindow)
-        self.overlay = nil
-      }
+  nonisolated func contentSharingPickerStartDidFailWithError(_ error: Error) {
+    Task { @MainActor in
+      print("Content sharing picker failed to start: \(error)")
+      continuation?.resume(returning: nil)
+      continuation = nil
+      picker.isActive = false
     }
   }
 }

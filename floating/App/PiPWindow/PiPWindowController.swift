@@ -10,15 +10,29 @@ import SwiftUI
 
 class PiPWindowController: NSWindowController {
   private var manager: PiPManager
-  private var targetWindow: SCWindow
+  private var contentFilter: SCContentFilter
+  private var displayName: String
 
-  init(window: SCWindow, manager: PiPManager) {
-    self.targetWindow = window
+  /// Initialize with an SCWindow (from manual selection in the list)
+  convenience init(window: SCWindow, manager: PiPManager) {
+    let filter = SCContentFilter(desktopIndependentWindow: window)
+    self.init(
+      filter: filter,
+      displayName: window.displayName,
+      initialSize: NSSize(width: window.frame.width, height: window.frame.height),
+      manager: manager
+    )
+  }
+
+  /// Initialize with an SCContentFilter (from native picker)
+  init(filter: SCContentFilter, displayName: String, initialSize: NSSize, manager: PiPManager) {
+    self.contentFilter = filter
+    self.displayName = displayName
     self.manager = manager
 
     // Calculate initial window size (quarter of original window)
-    let pipWidth = min(window.frame.width / 2, 600)
-    let pipHeight = min(window.frame.height / 2, 400)
+    let pipWidth = min(initialSize.width / 2, 600)
+    let pipHeight = min(initialSize.height / 2, 400)
 
     // Create the window
     let pipWindow = NSWindow(
@@ -36,7 +50,7 @@ class PiPWindowController: NSWindowController {
     // Start capturing
     Task {
       do {
-        try await manager.startCapture(for: window)
+        try await manager.startCapture(with: filter)
       } catch {
         print("Failed to start capture: \(error)")
         self.close()
@@ -53,7 +67,7 @@ class PiPWindowController: NSWindowController {
     guard let window = window else { return }
 
     // Configure window properties
-    window.title = "PiP: \(targetWindow.displayName)"
+    window.title = "PiP: \(displayName)"
     window.level = .floating // Always on top
     window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
     window.isMovableByWindowBackground = true

@@ -135,6 +135,7 @@ class PiPManager: NSObject {
 
   // MARK: - PiP Window Management
 
+  /// Create a PiP window from an SCWindow (manual list selection)
   func createPiPWindow(for window: SCWindow) {
     // Check if we already have a PiP window for this source
     let existingController = windowControllers.first { controller in
@@ -166,6 +167,43 @@ class PiPManager: NSObject {
     }
   }
 
+  /// Create a PiP window from an SCContentFilter (native picker selection)
+  func createPiPWindow(with filter: SCContentFilter, displayName: String, size: NSSize) {
+    // Check if we already have a PiP window for this source
+    let existingController = windowControllers.first { controller in
+      controller.window?.title.contains(displayName) ?? false
+    }
+
+    if let existingController = existingController {
+      // Bring existing window to front
+      existingController.window?.makeKeyAndOrderFront(nil)
+      return
+    }
+
+    // Create new PiP window
+    let controller = PiPWindowController(
+      filter: filter,
+      displayName: displayName,
+      initialSize: size,
+      manager: self
+    )
+    windowControllers.append(controller)
+
+    // Show the window
+    controller.showWindow(nil)
+
+    // Remove controller when window closes
+    NotificationCenter.default.addObserver(
+      forName: NSWindow.willCloseNotification,
+      object: controller.window,
+      queue: .main
+    ) { [weak self] _ in
+      Task { @MainActor [weak self] in
+        self?.windowControllers.removeAll { $0 === controller }
+      }
+    }
+  }
+
   func closeAllWindows() {
     windowControllers.forEach { $0.close() }
     windowControllers.removeAll()
@@ -173,7 +211,22 @@ class PiPManager: NSObject {
 
   // MARK: - Stream Capture
 
+  /// Start capture for an SCWindow
   func startCapture(for window: SCWindow) async throws {
+    let filter = SCContentFilter(desktopIndependentWindow: window)
+    try await startCapture(with: filter, width: Int(window.frame.width), height: Int(window.frame.height))
+    selectedWindow = window
+  }
+
+  /// Start capture with an SCContentFilter (from native picker)
+  func startCapture(with filter: SCContentFilter) async throws {
+    // Use content rect from filter for dimensions
+    let width = Int(filter.contentRect.width)
+    let height = Int(filter.contentRect.height)
+    try await startCapture(with: filter, width: width, height: height)
+  }
+
+  private func startCapture(with filter: SCContentFilter, width: Int, height: Int) async throws {
     // If already capturing, stop the existing capture first
     if isCapturing {
       await stopCapture()
@@ -181,16 +234,12 @@ class PiPManager: NSObject {
       try await Task.sleep(nanoseconds: 100_000_000)  // 0.1 seconds
     }
 
-    selectedWindow = window
     isStreamActive = true
-
-    // Create content filter for the specific window
-    let filter = SCContentFilter(desktopIndependentWindow: window)
 
     // Configure stream
     let streamConfig = SCStreamConfiguration()
-    streamConfig.width = Int(window.frame.width)
-    streamConfig.height = Int(window.frame.height)
+    streamConfig.width = width
+    streamConfig.height = height
 
     streamConfig.showsCursor = false
     streamConfig.capturesAudio = false

@@ -58,8 +58,8 @@ struct MenuBarContentView: View {
           // Quick select button
           Button(action: selectWindowByClick) {
             HStack {
-              Image(systemName: "cursorarrow.click")
-              Text("Click to Select Window")
+              Image(systemName: "macwindow.badge.plus")
+              Text("Select Window")
               Spacer()
             }
             .contentShape(Rectangle())
@@ -161,10 +161,14 @@ struct MenuBarContentView: View {
       // Small delay to allow popover to close
       try? await Task.sleep(nanoseconds: 200_000_000)
 
-      if let selectedWindow = await windowSelector.selectWindow(
-        from: pipManager.availableWindows)
-      {
-        pipManager.createPiPWindow(for: selectedWindow)
+      if let filter = await windowSelector.selectContent() {
+        // Get display name and size from the filter's content rect
+        let displayName = "Selected Window"
+        let size = NSSize(
+          width: filter.contentRect.width,
+          height: filter.contentRect.height
+        )
+        pipManager.createPiPWindow(with: filter, displayName: displayName, size: size)
       }
       isSelectingWindow = false
     }
