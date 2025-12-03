@@ -17,16 +17,18 @@ struct MenuBarContentView: View {
 
   var body: some View {
     VStack(spacing: 0) {
-      // Header
       HStack {
-        Text("Floating PiP")
+        Text("Floating")
           .font(.headline)
           .fontWeight(.semibold)
         Spacer()
       }
-      .padding()
+      .padding(.vertical, 8)
+      .padding(.horizontal, 9)
+      .padding(.vertical, 5)
 
       Divider()
+        .padding(.horizontal, 9)
 
       if !pipManager.hasPermission {
         VStack(spacing: 12) {
@@ -52,28 +54,18 @@ struct MenuBarContentView: View {
         }
         .padding()
       } else {
-        // Main interface
         VStack(spacing: 0) {
-          // Quick select button
-          Button {
-            selectWindowByClick()
-          } label: {
-            HStack {
-              Image(systemName: "macwindow.badge.plus")
-              Text("Select Window")
-              Spacer()
+          VStack(spacing: 0) {
+            MenuBarButton(title: "Select Window", icon: "macwindow.badge.plus") {
+              selectWindowByClick()
             }
-            .contentShape(Rectangle())
-            .padding(.horizontal)
-            .padding(.vertical, 10)
+            .disabled(isSelectingWindow)
           }
-          .buttonStyle(.plain)
-          .background(Color.accentColor.opacity(isSelectingWindow ? 0.2 : 0))
-          .disabled(isSelectingWindow)
+          .padding(.vertical, 5)
 
           Divider()
+            .padding(.horizontal, 9)
 
-          // Window list
           ScrollView {
             VStack(spacing: 2) {
               if pipManager.isRefreshing {
@@ -106,46 +98,26 @@ struct MenuBarContentView: View {
           .frame(maxHeight: 300)
 
           Divider()
+            .padding(.horizontal, 9)
 
-          // Bottom actions
-          HStack {
-            Button {
+          VStack(spacing: 0) {
+            MenuBarButton(title: "Refresh", icon: "arrow.clockwise") {
               Task {
                 await pipManager.refreshWindows()
               }
-            } label: {
-              Image(systemName: "arrow.clockwise")
-                .help("Refresh window list")
             }
-            .buttonStyle(.plain)
             .disabled(pipManager.isRefreshing)
 
-            Spacer()
-
-            if !pipManager.windowControllers.isEmpty {
-              Button {
-                pipManager.closeAllWindows()
-              } label: {
-                Text("Close All PiP")
-                  .font(.caption)
-              }
-              .buttonStyle(.link)
-            }
-
-            Button {
+            MenuBarButton(title: "Quit", icon: "power") {
               NSApplication.shared.terminate(nil)
-            } label: {
-              Text("Quit")
-                .font(.caption)
             }
-            .buttonStyle(.link)
           }
-          .padding(.horizontal)
-          .padding(.vertical, 8)
+          .padding(.vertical, 5)
         }
         .frame(width: 320)
       }
     }
+    .padding(.horizontal, 5)
     .task {
       await pipManager.checkPermission()
       if pipManager.hasPermission {
@@ -167,6 +139,8 @@ struct MenuBarContentView: View {
     }
   }
 }
+
+// MARK: - Menu Bar Window Row
 
 struct MenuBarWindowRow: View {
   let window: SCWindow
@@ -257,7 +231,8 @@ struct MenuBarWindowRow: View {
   }
 }
 
-// Preview
+// MARK: - Preview
+
 #Preview("Menu Bar Content") {
   MenuBarContentView()
     .environment(PiPManager())
