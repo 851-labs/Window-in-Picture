@@ -18,7 +18,7 @@ struct MenuBarContentView: View {
   var body: some View {
     VStack(spacing: 0) {
       HStack {
-        Text("Floating")
+        Text("Window in Picture")
           .font(.headline)
           .fontWeight(.semibold)
         Spacer()
