@@ -55,7 +55,9 @@ struct MenuBarContentView: View {
         // Main interface
         VStack(spacing: 0) {
           // Quick select button
-          Button(action: selectWindowByClick) {
+          Button {
+            selectWindowByClick()
+          } label: {
             HStack {
               Image(systemName: "macwindow.badge.plus")
               Text("Select Window")
@@ -107,11 +109,11 @@ struct MenuBarContentView: View {
 
           // Bottom actions
           HStack {
-            Button(action: {
+            Button {
               Task {
                 await pipManager.refreshWindows()
               }
-            }) {
+            } label: {
               Image(systemName: "arrow.clockwise")
                 .help("Refresh window list")
             }
@@ -121,18 +123,18 @@ struct MenuBarContentView: View {
             Spacer()
 
             if !pipManager.windowControllers.isEmpty {
-              Button(action: {
+              Button {
                 pipManager.closeAllWindows()
-              }) {
+              } label: {
                 Text("Close All PiP")
                   .font(.caption)
               }
               .buttonStyle(.link)
             }
 
-            Button(action: {
+            Button {
               NSApplication.shared.terminate(nil)
-            }) {
+            } label: {
               Text("Quit")
                 .font(.caption)
             }
@@ -171,7 +173,9 @@ struct MenuBarWindowRow: View {
   let action: () -> Void
 
   var body: some View {
-    Button(action: action) {
+    Button {
+      action()
+    } label: {
       HStack(spacing: 8) {
         // App icon
         if let icon = window.appIcon {
