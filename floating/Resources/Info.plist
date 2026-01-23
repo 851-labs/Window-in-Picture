@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDisplayName</key>
+  <string>Window-in-Picture</string>
+  <key>CFBundleExecutable</key>
+  <string>$(EXECUTABLE_NAME)</string>
+  <key>CFBundleIdentifier</key>
+  <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+  <key>CFBundleName</key>
+  <string>$(PRODUCT_NAME)</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>$(MARKETING_VERSION)</string>
+  <key>CFBundleVersion</key>
+  <string>$(CURRENT_PROJECT_VERSION)</string>
+  <key>LSApplicationCategoryType</key>
+  <string>public.app-category.utilities</string>
+  <key>LSUIElement</key>
+  <true/>
+  <key>LSMinimumSystemVersion</key>
+  <string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+  <key>NSDesktopCaptureUsageDescription</key>
+  <string>This app needs screen recording access to mirror windows in picture-in-picture mode.</string>
+  <key>NSPrincipalClass</key>
+  <string>NSApplication</string>
+  <key>SUFeedURL</key>
+  <string>https://github.com/851-labs/Window-in-Picture/releases/latest/download/appcast.xml</string>
+  <key>SUEnableInstallerLauncherService</key>
+  <true/>
+  <key>SUPublicEDKey</key>
+  <string>U2QTeFj4OS3tznPQhjMaAG3jYCjjOxxS9SlQMTD/oKs=</string>
+</dict>
+</plist>

@@ -5,6 +5,7 @@ buildServer.json
 
 # Local build artifacts
 .build/
+build/
 
 # Local environment
 .env
@@ -15,3 +16,4 @@ buildServer.json
 # Xcode user data
 xcuserdata/
 *.xcuserdatad
+**/*.xcworkspace/xcshareddata/
