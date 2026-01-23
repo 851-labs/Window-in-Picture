@@ -20,6 +20,10 @@ jobs:
         run: |
           /opt/homebrew/bin/brew install 851-labs/tap/appdrop || /opt/homebrew/bin/brew upgrade 851-labs/tap/appdrop
 
+      - name: Install GitHub CLI
+        run: |
+          /opt/homebrew/bin/brew install gh || /opt/homebrew/bin/brew upgrade gh
+
       - name: Set up CI signing environment
         env:
           DEVELOPER_ID_CERT_P12: ${{ secrets.DEVELOPER_ID_CERT_P12 }}
@@ -44,4 +48,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          export PATH="/opt/homebrew/bin:$PATH"
           /opt/homebrew/bin/appdrop publish
