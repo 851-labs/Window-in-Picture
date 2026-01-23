@@ -20,11 +20,7 @@ jobs:
 
       - name: Install appdrop
         run: |
-          /opt/homebrew/bin/brew install 851-labs/tap/appdrop || /opt/homebrew/bin/brew upgrade 851-labs/tap/appdrop
-
-      - name: Install GitHub CLI
-        run: |
-          /opt/homebrew/bin/brew install gh || /opt/homebrew/bin/brew upgrade gh
+          brew install 851-labs/tap/appdrop || brew upgrade 851-labs/tap/appdrop
 
       - name: Set up CI signing environment
         env:
@@ -33,8 +29,7 @@ jobs:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
           DEVELOPER_ID_APPLICATION: ${{ secrets.DEVELOPER_ID_APPLICATION }}
         run: |
-          export PATH="/opt/homebrew/bin:$PATH"
-          /opt/homebrew/bin/appdrop setup-ci
+          appdrop setup-ci
 
       - name: Run appdrop release
         env:
@@ -44,11 +39,10 @@ jobs:
           APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          /opt/homebrew/bin/appdrop release --scheme WindowInPicture --verbose
+          appdrop release --verbose
 
       - name: Publish GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          export PATH="/opt/homebrew/bin:$PATH"
-          /opt/homebrew/bin/appdrop publish
+          appdrop publish
