@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.8 - 2026-01-23
+- chore: clean up release workflow
+
 ## 1.0.7 - 2026-01-23
 - chore: update release checkout safety config
 
