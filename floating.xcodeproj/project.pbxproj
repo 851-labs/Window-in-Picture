@@ -276,7 +276,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_SUEnableInstallerLauncherService = YES;
 				INFOPLIST_KEY_SUFeedURL = "https://github.com/851-labs/Window-in-Picture/releases/latest/download/appcast.xml";
-				INFOPLIST_KEY_SUPublicEDKey = "csUeIYVMDqMX5qihXjjy8ux3LBUFJ7FGnNLkxXMuo4o=";
+				INFOPLIST_KEY_SUPublicEDKey = "U2QTeFj4OS3tznPQhjMaAG3jYCjjOxxS9SlQMTD/oKs=";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -317,7 +317,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_SUEnableInstallerLauncherService = YES;
 				INFOPLIST_KEY_SUFeedURL = "https://github.com/851-labs/Window-in-Picture/releases/latest/download/appcast.xml";
-				INFOPLIST_KEY_SUPublicEDKey = "csUeIYVMDqMX5qihXjjy8ux3LBUFJ7FGnNLkxXMuo4o=";
+				INFOPLIST_KEY_SUPublicEDKey = "U2QTeFj4OS3tznPQhjMaAG3jYCjjOxxS9SlQMTD/oKs=";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
