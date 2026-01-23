@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.7 - 2026-01-23
+- chore: update release checkout safety config
+
 ## 1.0.6 - 2026-01-23
 - chore: update app name to Window-in-Picture
 
