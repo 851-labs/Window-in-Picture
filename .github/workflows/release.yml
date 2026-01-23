@@ -11,6 +11,8 @@ permissions:
 jobs:
   release:
     runs-on: [self-hosted, macOS, ARM64, claudl]
+    env:
+      PATH: /opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin
 
     steps:
       - name: Checkout

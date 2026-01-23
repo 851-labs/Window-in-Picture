@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.9 - 2026-01-23
+- fix: restore Homebrew PATH in release workflow
+
 ## 1.0.8 - 2026-01-23
 - chore: clean up release workflow
 
