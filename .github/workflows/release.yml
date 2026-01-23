@@ -27,6 +27,7 @@ jobs:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
           DEVELOPER_ID_APPLICATION: ${{ secrets.DEVELOPER_ID_APPLICATION }}
         run: |
+          export PATH="/opt/homebrew/bin:$PATH"
           /opt/homebrew/bin/appdrop setup-ci
 
       - name: Run appdrop release
