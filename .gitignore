@@ -6,6 +6,9 @@ buildServer.json
 # Local build artifacts
 .build/
 
+# Local environment
+.env
+
 # macOS
 .DS_Store
 
