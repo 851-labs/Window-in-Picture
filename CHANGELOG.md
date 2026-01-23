@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.10 - 2026-01-23
+- fix: use WindowInPicture scheme for releases
+
 ## 1.0.9 - 2026-01-23
 - fix: restore Homebrew PATH in release workflow
 
