@@ -1,4 +1,4 @@
-# Floating PiP - Menubar Picture-in-Picture Window Mirror for macOS
+# Window-in-Picture - Menubar Picture-in-Picture Window Mirror for macOS
 
 A lightweight macOS menubar app that allows you to mirror any window in a floating picture-in-picture mode, perfect for keeping an eye on Terminal, Slack, or any other app while working.
 

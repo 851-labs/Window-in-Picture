@@ -5,3 +5,10 @@ buildServer.json
 
 # Local build artifacts
 .build/
+
+# macOS
+.DS_Store
+
+# Xcode user data
+xcuserdata/
+*.xcuserdatad

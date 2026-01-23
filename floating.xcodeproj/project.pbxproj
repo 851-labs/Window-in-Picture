@@ -6,8 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F4D6A1B82F1234567890ABCD /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = F4D6A1BA2F1234567890ABCD /* Sparkle */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		BC4FC7CD2EA85B38007E92A8 /* floating.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = floating.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC4FC7CD2EA85B38007E92A8 /* WindowInPicture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindowInPicture.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4D6A1B82F1234567890ABCD /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,7 +45,7 @@
 		BC4FC7CE2EA85B38007E92A8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BC4FC7CD2EA85B38007E92A8 /* floating.app */,
+				BC4FC7CD2EA85B38007E92A8 /* WindowInPicture.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,7 +53,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		BC4FC7CC2EA85B38007E92A8 /* floating */ = {
+		BC4FC7CC2EA85B38007E92A8 /* WindowInPicture */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BC4FC7D82EA85B3A007E92A8 /* Build configuration list for PBXNativeTarget "floating" */;
 			buildPhases = (
@@ -63,11 +68,12 @@
 			fileSystemSynchronizedGroups = (
 				BC4FC7CF2EA85B38007E92A8 /* floating */,
 			);
-			name = floating;
+			name = WindowInPicture;
 			packageProductDependencies = (
+				F4D6A1BA2F1234567890ABCD /* Sparkle */,
 			);
-			productName = floating;
-			productReference = BC4FC7CD2EA85B38007E92A8 /* floating.app */;
+			productName = WindowInPicture;
+			productReference = BC4FC7CD2EA85B38007E92A8 /* WindowInPicture.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -94,12 +100,15 @@
 			);
 			mainGroup = BC4FC7C42EA85B38007E92A8;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F4D6A1B92F1234567890ABCD /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BC4FC7CE2EA85B38007E92A8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				BC4FC7CC2EA85B38007E92A8 /* floating */,
+				BC4FC7CC2EA85B38007E92A8 /* WindowInPicture */,
 			);
 		};
 /* End PBXProject section */
@@ -250,6 +259,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = floating/Resources/WindowInPicture.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -259,18 +269,21 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Window in Picture";
+				INFOPLIST_KEY_CFBundleDisplayName = "Window-in-Picture";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSDesktopCaptureUsageDescription = "This app needs screen recording access to mirror windows in picture-in-picture mode.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_SUEnableInstallerLauncherService = YES;
+				INFOPLIST_KEY_SUFeedURL = "https://github.com/851-labs/Window-in-Picture/releases/latest/download/appcast.xml";
+				INFOPLIST_KEY_SUPublicEDKey = "csUeIYVMDqMX5qihXjjy8ux3LBUFJ7FGnNLkxXMuo4o=";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = so.alexandru.floating;
+				PRODUCT_BUNDLE_IDENTIFIER = so.alexandru.window-in-picture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -287,6 +300,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = floating/Resources/WindowInPicture.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -296,18 +310,21 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Window in Picture";
+				INFOPLIST_KEY_CFBundleDisplayName = "Window-in-Picture";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSDesktopCaptureUsageDescription = "This app needs screen recording access to mirror windows in picture-in-picture mode.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_SUEnableInstallerLauncherService = YES;
+				INFOPLIST_KEY_SUFeedURL = "https://github.com/851-labs/Window-in-Picture/releases/latest/download/appcast.xml";
+				INFOPLIST_KEY_SUPublicEDKey = "csUeIYVMDqMX5qihXjjy8ux3LBUFJ7FGnNLkxXMuo4o=";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = so.alexandru.floating;
+				PRODUCT_BUNDLE_IDENTIFIER = so.alexandru.window-in-picture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -341,6 +358,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F4D6A1B92F1234567890ABCD /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F4D6A1BA2F1234567890ABCD /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4D6A1B92F1234567890ABCD /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BC4FC7C52EA85B38007E92A8 /* Project object */;
 }

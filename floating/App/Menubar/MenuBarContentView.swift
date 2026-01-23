@@ -7,18 +7,24 @@
 
 import AppKit
 import ScreenCaptureKit
+import Sparkle
 import SwiftUI
 
 struct MenuBarContentView: View {
+  let updaterController: SPUStandardUpdaterController?
   @Environment(PiPManager.self) private var pipManager
   @Environment(\.dismiss) private var dismiss
 
   @State private var isSelectingWindow = false
 
+  init(updaterController: SPUStandardUpdaterController? = nil) {
+    self.updaterController = updaterController
+  }
+
   var body: some View {
     VStack(spacing: 0) {
       HStack {
-        Text("Window in Picture")
+        Text("Window-in-Picture")
           .font(.headline)
           .fontWeight(.semibold)
         Spacer()
@@ -107,6 +113,11 @@ struct MenuBarContentView: View {
               }
             }
             .disabled(pipManager.isRefreshing)
+
+            MenuBarButton(title: "Check for Updates...", icon: "square.and.arrow.down") {
+              updaterController?.checkForUpdates(nil)
+            }
+            .disabled(updaterController == nil)
 
             MenuBarButton(title: "Quit", icon: "power") {
               NSApplication.shared.terminate(nil)
