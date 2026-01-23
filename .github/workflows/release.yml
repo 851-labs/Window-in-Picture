@@ -27,7 +27,7 @@ jobs:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
           DEVELOPER_ID_APPLICATION: ${{ secrets.DEVELOPER_ID_APPLICATION }}
         run: |
-          appdrop setup-ci
+          /opt/homebrew/bin/appdrop setup-ci
 
       - name: Run appdrop release
         env:
@@ -37,10 +37,10 @@ jobs:
           APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          appdrop release --verbose
+          /opt/homebrew/bin/appdrop release --verbose
 
       - name: Publish GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          appdrop publish
+          /opt/homebrew/bin/appdrop publish
