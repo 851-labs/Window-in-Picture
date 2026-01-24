@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.14 - 2026-01-24
+- fix: align release scheme with app bundle name
+
 ## 1.0.13 - 2026-01-24
 - fix: set product name to Window-in-Picture
 
