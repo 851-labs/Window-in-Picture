@@ -5,11 +5,13 @@
 //  Created by Alexandru Turcanu on 10/22/25.
 //
 
+import AppKit
+import Observation
 import SwiftUI
 
+@MainActor
 struct PiPWindowView: View {
   @Bindable var manager: PiPManager
-  @State private var image: NSImage?
 
   var body: some View {
     GeometryReader { geometry in
@@ -17,8 +19,12 @@ struct PiPWindowView: View {
         // Black background
         Color.black
 
-        if let image = image {
-          Image(nsImage: image)
+        if let cgImage = manager.latestFrame {
+          let nsImage = NSImage(
+            cgImage: cgImage,
+            size: NSSize(width: cgImage.width, height: cgImage.height)
+          )
+          Image(nsImage: nsImage)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: geometry.size.width, height: geometry.size.height)
@@ -34,13 +40,6 @@ struct PiPWindowView: View {
               .padding(.top)
           }
         }
-      }
-    }
-    .onChange(of: manager.latestFrame) { _, newValue in
-      if let cgImage = newValue {
-        self.image = NSImage(
-          cgImage: cgImage, size: NSSize(width: cgImage.width, height: cgImage.height)
-        )
       }
     }
   }

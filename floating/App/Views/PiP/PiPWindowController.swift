@@ -5,20 +5,21 @@
 //  Created by Alexandru Turcanu on 10/22/25.
 //
 
+import AppKit
 import ScreenCaptureKit
 import SwiftUI
 
+@MainActor
 class PiPWindowController: NSWindowController, NSWindowDelegate {
-  private var manager: PiPManager
-  private var contentFilter: SCContentFilter
-  private var displayName: String
+  private let manager: PiPManager
+  private let displayName: String
 
   /// Initialize with an SCWindow (from manual selection in the list)
-  convenience init(window: SCWindow, manager: PiPManager) {
+  convenience init(window: SCWindow, displayName: String, manager: PiPManager) {
     let filter = SCContentFilter(desktopIndependentWindow: window)
     self.init(
       filter: filter,
-      displayName: window.displayName,
+      displayName: displayName,
       initialSize: NSSize(width: window.frame.width, height: window.frame.height),
       manager: manager
     )
@@ -26,7 +27,6 @@ class PiPWindowController: NSWindowController, NSWindowDelegate {
 
   /// Initialize with an SCContentFilter (from native picker)
   init(filter: SCContentFilter, displayName: String, initialSize: NSSize, manager: PiPManager) {
-    self.contentFilter = filter
     self.displayName = displayName
     self.manager = manager
 
@@ -106,8 +106,7 @@ class PiPWindowController: NSWindowController, NSWindowDelegate {
   func windowWillClose(_ notification: Notification) {
     // Stop capture when window closes
     // Use detached task to ensure it runs even as window controller is being deallocated
-    let manager = self.manager
-    Task.detached { @MainActor in
+    Task {
       await manager.stopCapture()
     }
   }
