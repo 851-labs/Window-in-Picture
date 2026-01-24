@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.18 - 2026-01-24
+- fix: align product name with target
+
 ## 1.0.17 - 2026-01-24
 - chore: rename target to Window-in-Picture
 
