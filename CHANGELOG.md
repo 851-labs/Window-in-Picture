@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.11 - 2026-01-23
+- chore: drop workflow PATH override
+
 ## 1.0.10 - 2026-01-23
 - fix: use WindowInPicture scheme for releases
 
