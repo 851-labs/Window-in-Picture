@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.16 - 2026-01-24
+- chore: sparkle validation release
+
 ## 1.0.15 - 2026-01-24
 - fix: align entitlements filename with scheme
 
