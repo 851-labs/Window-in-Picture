@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.13 - 2026-01-24
+- fix: set product name to Window-in-Picture
+
 ## 1.0.12 - 2026-01-24
 - fix: rename app bundle to Window-in-Picture
 
