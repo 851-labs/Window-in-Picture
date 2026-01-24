@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.17 - 2026-01-24
+- chore: rename target to Window-in-Picture
+
 ## 1.0.16 - 2026-01-24
 - chore: sparkle validation release
 

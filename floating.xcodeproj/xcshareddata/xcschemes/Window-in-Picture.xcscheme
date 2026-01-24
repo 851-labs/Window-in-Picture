@@ -17,7 +17,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "BC4FC7CC2EA85B38007E92A8"
                BuildableName = "Window-in-Picture.app"
-               BlueprintName = "WindowInPicture"
+               BlueprintName = "Window-in-Picture"
                ReferencedContainer = "container:floating.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,7 +46,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BC4FC7CC2EA85B38007E92A8"
             BuildableName = "Window-in-Picture.app"
-            BlueprintName = "WindowInPicture"
+            BlueprintName = "Window-in-Picture"
             ReferencedContainer = "container:floating.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "BC4FC7CC2EA85B38007E92A8"
             BuildableName = "Window-in-Picture.app"
-            BlueprintName = "WindowInPicture"
+            BlueprintName = "Window-in-Picture"
             ReferencedContainer = "container:floating.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
