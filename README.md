@@ -1,46 +1,57 @@
-# Window-in-Picture - Menubar Picture-in-Picture Window Mirror for macOS
+<div align="center">
+  <h1><b>Window-in-Picture</b></h1>
+  <p>Lightweight menubar app that mirrors any window in picture-in-picture mode.<br>Native, fast, and private by design.</p>
+</div>
 
-A lightweight macOS menubar app that allows you to mirror any window in a floating picture-in-picture mode, perfect for keeping an eye on Terminal, Slack, or any other app while working.
+<div align="center">
+  <a href="https://github.com/851-labs/Window-in-Picture/releases/latest">
+    <img src="https://img.shields.io/badge/macOS-26.0%2B-blue?logo=apple&logoColor=white&style=flat" alt="macOS 26.0+">
+  </a>
+  <img src="https://img.shields.io/badge/Swift-6.2-f05138?logo=swift&logoColor=white&style=flat" alt="Swift 6.2">
+  <a href="https://github.com/851-labs/Window-in-Picture/releases/latest">
+    <img src="https://img.shields.io/github/v/release/851-labs/Window-in-Picture?label=Release&style=flat" alt="Latest Release">
+  </a>
+  <a href="https://github.com/851-labs/homebrew-tap">
+    <img src="https://img.shields.io/badge/Homebrew-851--labs%2Ftap-fbb040?logo=homebrew&logoColor=white&style=flat" alt="Homebrew tap">
+  </a>
+  <br>
+  <a href="https://github.com/851-labs/Window-in-Picture/releases/latest/download/Window-in-Picture.dmg">
+    <img src="https://img.shields.io/badge/Download-macOS-black?logo=apple&logoColor=white&style=flat" alt="Download macOS">
+  </a>
+  <a href="https://github.com/851-labs/Window-in-Picture/releases/latest">
+    <img src="https://img.shields.io/github/downloads/851-labs/Window-in-Picture/total?label=downloads&style=flat" alt="Downloads total">
+  </a>
+  <a href="LICENSE.md">
+    <img src="https://img.shields.io/badge/License-MIT-blue?style=flat" alt="MIT License">
+  </a>
+</div>
 
-## Features
+## Installation
 
-- **Menubar App**: Lives in your menubar for quick access
-- **Click-to-Select**: Simply click on any window to create a PiP mirror
-- **Window List**: Browse and select from a list of all open windows
-- **Real-time Mirroring**: 30 FPS live updates of the selected window
-- **Floating Windows**: PiP windows stay on top of all other windows
-- **Resizable**: Adjust PiP window size to your preference
-- **Multiple Windows**: Create multiple PiP windows simultaneously
-- **No Dock Icon**: Runs quietly in the background without cluttering your dock
+### Direct Download
 
-## Requirements
+Download [the latest release](https://github.com/851-labs/Window-in-Picture/releases/latest) and drag it to your Applications folder.
 
-- macOS 15.0 or later
-- Screen recording permission (requested on first launch)
+[![Download macOS](https://img.shields.io/badge/Download-macOS-black?logo=apple&logoColor=white&style=for-the-badge)](https://github.com/851-labs/Window-in-Picture/releases/latest/download/Window-in-Picture.dmg)
 
-## How to Use
+### Homebrew
 
-1. **Build and Run**: Open the project in Xcode and press Cmd+R to build and run
-2. **Look for the Menubar Icon**: Find the PiP icon (⊞) in your menubar
-3. **Grant Permission**: When prompted, grant screen recording permission in System Settings
-4. **Select a Window**:
-   - Click the menubar icon to open the window picker
-   - Click "Click to Select Window" and then click on any window you want to mirror
-   - OR browse the window list and click on a window entry
-5. **Manage PiP Windows**:
-   - Resize by dragging window corners
-   - Move by dragging the title bar
-   - Close individual PiP windows with the close button
-   - Use "Close All PiP" in the menubar menu to close all floating windows at once
-6. **Quit**: Click the menubar icon and select "Quit" to exit the app
+```
+brew install --cask 851-labs/tap/window-in-picture
+```
 
-## Technical Details
+## Tech Stack
 
-- Built with SwiftUI and ScreenCaptureKit
-- Uses modern macOS 15 APIs for efficient screen capture
-- Implements proper memory management for streaming
-- Supports multiple displays
+- [OpenCode](https://opencode.ai/) - AI Coding Agent
+- [Swift 6.2](https://www.swift.org/)
+- [SwiftUI](https://developer.apple.com/documentation/swiftui) - UI Framework
+- [ScreenCaptureKit](https://developer.apple.com/documentation/screencapturekit) - Window capture
+- [Sparkle](https://sparkle-project.org/) - Software Update Framework
 
-## Privacy & Security
+## License
 
-This app requires screen recording permission to function. It only captures windows you explicitly select and does not store or transmit any captured content. All processing happens locally on your device.
+This project is released under the MIT License. See [LICENSE](LICENSE.md) for details.
+
+## Support
+
+If you like this project, please consider giving it a star.
