@@ -11,7 +11,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BC4FC7CD2EA85B38007E92A8 /* WindowInPicture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindowInPicture.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC4FC7CD2EA85B38007E92A8 /* Window-in-Picture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Window-in-Picture.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -45,7 +45,7 @@
 		BC4FC7CE2EA85B38007E92A8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BC4FC7CD2EA85B38007E92A8 /* WindowInPicture.app */,
+				BC4FC7CD2EA85B38007E92A8 /* Window-in-Picture.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -72,8 +72,8 @@
 			packageProductDependencies = (
 				F4D6A1BA2F1234567890ABCD /* Sparkle */,
 			);
-			productName = WindowInPicture;
-			productReference = BC4FC7CD2EA85B38007E92A8 /* WindowInPicture.app */;
+			productName = "Window-in-Picture";
+			productReference = BC4FC7CD2EA85B38007E92A8 /* Window-in-Picture.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -262,7 +262,7 @@
 				CODE_SIGN_ENTITLEMENTS = floating/Resources/WindowInPicture.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = WH4QW9ND3J;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -275,7 +275,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0.11;
+				MARKETING_VERSION = 1.0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = so.alexandru.window-in-picture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -296,7 +296,7 @@
 				CODE_SIGN_ENTITLEMENTS = floating/Resources/WindowInPicture.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = WH4QW9ND3J;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -309,7 +309,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0.11;
+				MARKETING_VERSION = 1.0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = so.alexandru.window-in-picture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
