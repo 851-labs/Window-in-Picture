@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.15 - 2026-01-24
+- fix: align entitlements filename with scheme
+
 ## 1.0.14 - 2026-01-24
 - fix: align release scheme with app bundle name
 
