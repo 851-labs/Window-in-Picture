@@ -21,7 +21,7 @@ jobs:
       - name: Install appdrop
         run: brew install 851-labs/tap/appdrop || brew upgrade 851-labs/tap/appdrop
 
-      - name: Set up CI signing environment
+      - name: Set up CI
         env:
           DEVELOPER_ID_CERT_P12: ${{ secrets.DEVELOPER_ID_CERT_P12 }}
           DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_CERT_PASSWORD }}
