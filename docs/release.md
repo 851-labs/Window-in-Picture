@@ -33,7 +33,7 @@ appdrop automatically loads `.env` from the repo root.
 
 ### 2) Bump Version
 
-Update versions in `floating.xcodeproj/project.pbxproj`:
+Update versions in `Window-in-Picture.xcodeproj/project.pbxproj`:
 
 - `MARKETING_VERSION` (e.g., `1.0.0`)
 - `CURRENT_PROJECT_VERSION` (increment integer)

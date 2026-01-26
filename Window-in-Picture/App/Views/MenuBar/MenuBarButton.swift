@@ -1,6 +1,6 @@
 //
 //  MenuBarButton.swift
-//  floating
+//  Window-in-Picture
 //
 //  Created by Alexandru Turcanu on 12/3/25.
 //

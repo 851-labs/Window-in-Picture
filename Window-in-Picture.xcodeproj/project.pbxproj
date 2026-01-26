@@ -15,9 +15,9 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		BC4FC7CF2EA85B38007E92A8 /* floating */ = {
+		BC4FC7CF2EA85B38007E92A8 /* Window-in-Picture */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = floating;
+			path = Window-in-Picture;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -37,7 +37,7 @@
 		BC4FC7C42EA85B38007E92A8 = {
 			isa = PBXGroup;
 			children = (
-				BC4FC7CF2EA85B38007E92A8 /* floating */,
+				BC4FC7CF2EA85B38007E92A8 /* Window-in-Picture */,
 				BC4FC7CE2EA85B38007E92A8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,7 +66,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				BC4FC7CF2EA85B38007E92A8 /* floating */,
+				BC4FC7CF2EA85B38007E92A8 /* Window-in-Picture */,
 			);
 			name = "Window-in-Picture";
 			packageProductDependencies = (
@@ -259,7 +259,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "floating/Resources/Window-in-Picture.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Window-in-Picture/Resources/Window-in-Picture.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 20;
@@ -269,7 +269,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = floating/Resources/Info.plist;
+				INFOPLIST_FILE = Window-in-Picture/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -294,7 +294,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "floating/Resources/Window-in-Picture.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Window-in-Picture/Resources/Window-in-Picture.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 20;
@@ -304,7 +304,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = floating/Resources/Info.plist;
+				INFOPLIST_FILE = Window-in-Picture/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

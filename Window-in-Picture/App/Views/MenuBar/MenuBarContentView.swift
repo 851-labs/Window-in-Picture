@@ -1,6 +1,6 @@
 //
 //  MenuBarContentView.swift
-//  floating
+//  Window-in-Picture
 //
 //  Created by Alexandru Turcanu on 11/1/25.
 //

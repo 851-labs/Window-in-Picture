@@ -1,6 +1,6 @@
 //
 //  App.swift
-//  floating
+//  Window-in-Picture
 //
 //  Created by Alexandru Turcanu on 10/22/25.
 //
