@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.22 - 2026-01-25
+- chore: rename floating folder to Window-in-Picture
+
+## 1.0.21 - 2026-01-25
+- fix: update scheme to reference renamed xcodeproj
+
+## 1.0.20 - 2026-01-25
+- chore: rename xcodeproj to match scheme name
+
+## 1.0.19 - 2026-01-25
+- refactor: reorganize view hierarchy and improve concurrency compliance
+- chore: remove SPARKLE_PRIVATE_KEY from setup-ci
+
 ## 1.0.18 - 2026-01-24
 - fix: align product name with target
 
