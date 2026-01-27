@@ -69,11 +69,18 @@ extension PiPManager {
   }
 
   private func shouldIncludeWindow(_ window: SCWindow) -> Bool {
-    guard
-      let app = window.owningApplication,
-      let title = window.title,
-      title.isEmpty == false
-    else {
+    guard let app = window.owningApplication else {
+      return false
+    }
+
+    let title = window.title ?? ""
+    let appName = app.applicationName
+
+    if title.isEmpty && appName.isEmpty {
+      return false
+    }
+
+    if title.isEmpty && app.bundleIdentifier == "com.apple.finder" {
       return false
     }
 
