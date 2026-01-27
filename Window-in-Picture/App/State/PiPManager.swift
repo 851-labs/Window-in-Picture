@@ -75,8 +75,17 @@ extension PiPManager {
 
     let title = window.title ?? ""
     let appName = app.applicationName
+    let runningApp = NSRunningApplication(processIdentifier: app.processID)
+    let bundleID = app.bundleIdentifier
 
     if title.isEmpty && appName.isEmpty {
+      return false
+    }
+
+    if title.isEmpty,
+       let runningApp,
+       runningApp.activationPolicy != .regular
+    {
       return false
     }
 
@@ -84,7 +93,13 @@ extension PiPManager {
       return false
     }
 
-    let bundleID = app.bundleIdentifier
+    if title.isEmpty {
+      let windowArea = window.frame.width * window.frame.height
+      if windowArea < 40_000 {
+        return false
+      }
+    }
+
     if bundleID == Bundle.main.bundleIdentifier {
       return false
     }
@@ -106,6 +121,7 @@ extension PiPManager {
       "com.apple.wallpaper.agent",
       "com.apple.AccessibilityUIServer",
       "com.apple.Spotlight",
+      "com.steipete.codexbar",
     ].contains(bundleID) {
       return false
     }
