@@ -71,6 +71,8 @@ struct MenuBarContentView: View {
         Label("About Window-in-Picture", systemImage: "info.circle")
       }
 
+      settingsButton
+
       Divider()
 
       Button(action: quitApp) {
@@ -158,6 +160,12 @@ struct MenuBarContentView: View {
 
   private func openAboutWindow() {
     AboutWindowController.shared.show()
+  }
+
+  private var settingsButton: some View {
+    SettingsLink {
+      Label("Settings...", systemImage: "gearshape")
+    }
   }
 
   private func displayName(for window: SCWindow, appWindowCounts: [String: Int]) -> String {

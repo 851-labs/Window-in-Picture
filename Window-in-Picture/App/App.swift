@@ -22,5 +22,9 @@ struct WindowInPictureApp: App {
         .renderingMode(.template)
     }
     .menuBarExtraStyle(.menu)
+
+    Settings {
+      SettingsView()
+    }
   }
 }
