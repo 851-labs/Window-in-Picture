@@ -102,7 +102,11 @@ struct MenuBarContentView: View {
   }
 
   private var windowListSection: some View {
-    Group {
+    let appWindowCounts = Dictionary(
+      grouping: pipManager.availableWindows,
+      by: { $0.owningApplication?.bundleIdentifier ?? "" }
+    ).mapValues { $0.count }
+    return Group {
       if pipManager.isRefreshing {
         Text("Loading windows...")
           .disabled(true)
@@ -116,7 +120,7 @@ struct MenuBarContentView: View {
             dismiss()
           } label: {
             Label {
-              Text(displayName(for: window))
+              Text(displayName(for: window, appWindowCounts: appWindowCounts))
             } icon: {
               windowIcon(for: window)
             }
@@ -156,12 +160,25 @@ struct MenuBarContentView: View {
     AboutWindowController.shared.show()
   }
 
-  private func displayName(for window: SCWindow) -> String {
-    if let appName = window.owningApplication?.applicationName,
-       let windowTitle = window.title {
+  private func displayName(for window: SCWindow, appWindowCounts: [String: Int]) -> String {
+    let appName = window.owningApplication?.applicationName
+    let windowTitle = window.title
+    let bundleID = window.owningApplication?.bundleIdentifier ?? ""
+    let windowCount = appWindowCounts[bundleID] ?? 0
+
+    if let appName, windowCount <= 1 {
+      return truncatedTitle(appName)
+    }
+
+    if let appName, let windowTitle, windowTitle.isEmpty == false {
       return truncatedTitle("\(appName) - \(windowTitle)")
     }
-    return truncatedTitle(window.title ?? "Unknown Window")
+
+    if let windowTitle, windowTitle.isEmpty == false {
+      return truncatedTitle(windowTitle)
+    }
+
+    return truncatedTitle(appName ?? "Unknown Window")
   }
 
   private func truncatedTitle(_ title: String) -> String {
