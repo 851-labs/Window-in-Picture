@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.25 - 2026-01-27
+- feat: add app and menu bar icon assets
+- fix: include untitled app windows
+- fix: filter menu bar-only windows
+- ui: simplify window titles
+- docs: add retry guidance for release workflow
+
 ## 1.0.24 - 2026-01-26
 - refactor: switch menu bar UI to native menu items
 - feat: add custom About window
