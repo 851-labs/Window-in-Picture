@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.24 - 2026-01-26
+- refactor: switch menu bar UI to native menu items
+- feat: add custom About window
+- fix: filter out Backstop display windows
+- ui: update menu iconography and About placement
+
 ## 1.0.23 - 2026-01-26
 - fix: exclude Info.plist from synced resources
 - chore: apply Xcode recommended settings
