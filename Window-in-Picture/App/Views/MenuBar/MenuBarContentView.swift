@@ -57,15 +57,6 @@ struct MenuBarContentView: View {
       Divider()
 
       Button {
-        Task {
-          await pipManager.refreshWindows()
-        }
-      } label: {
-        Label("Refresh", systemImage: "arrow.clockwise")
-      }
-      .disabled(pipManager.isRefreshing)
-
-      Button {
         updaterController?.checkForUpdates(nil)
       } label: {
         Label("Check for Updates...", systemImage: "square.and.arrow.down")

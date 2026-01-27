@@ -8,13 +8,6 @@ struct MenuBarActionsView: View {
 
   var body: some View {
     VStack(spacing: 0) {
-      MenuBarButton(title: "Refresh", icon: "arrow.clockwise") {
-        Task {
-          await manager.refreshWindows()
-        }
-      }
-      .disabled(manager.isRefreshing)
-
       MenuBarButton(title: "Check for Updates...", icon: "square.and.arrow.down") {
         updaterController?.checkForUpdates(nil)
       }
