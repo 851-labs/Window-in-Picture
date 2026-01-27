@@ -48,7 +48,6 @@ brew install --cask 851-labs/tap/window-in-picture
 
 ## Tech Stack
 
-- [OpenCode](https://opencode.ai/) - AI Coding Agent
 - [Swift 6.2](https://www.swift.org/)
 - [SwiftUI](https://developer.apple.com/documentation/swiftui) - UI Framework
 - [ScreenCaptureKit](https://developer.apple.com/documentation/screencapturekit) - Window capture
