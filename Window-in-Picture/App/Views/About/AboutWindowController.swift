@@ -106,9 +106,7 @@ private struct AboutView: View {
   }
 
   private var appIcon: some View {
-    let icon = NSApp.applicationIconImage
-      ?? NSImage(named: NSImage.applicationIconName)
-      ?? NSImage(size: NSSize(width: 92, height: 92))
+    let icon = NSImage(named: "AppIcon") ?? NSImage(size: NSSize(width: 92, height: 92))
     return Image(nsImage: icon)
       .resizable()
       .aspectRatio(contentMode: .fit)
