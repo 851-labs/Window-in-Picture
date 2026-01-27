@@ -14,9 +14,12 @@ struct WindowInPictureApp: App {
   @State private var pipManager = PiPManager()
 
   var body: some Scene {
-    MenuBarExtra("Window-in-Picture", systemImage: "pip.enter") {
+    MenuBarExtra {
       MenuBarContentView(updaterController: updaterController)
         .environment(pipManager)
+    } label: {
+      Image("MenuBarIcon")
+        .renderingMode(.template)
     }
     .menuBarExtraStyle(.menu)
   }
