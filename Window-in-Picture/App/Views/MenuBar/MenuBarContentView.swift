@@ -43,6 +43,12 @@ struct MenuBarContentView: View {
       }
       .disabled(isSelectingWindow)
 
+      Button {
+        openAboutPanel()
+      } label: {
+        Label("About Window-in-Picture", systemImage: "info.circle")
+      }
+
       Divider()
 
       windowListSection
@@ -144,6 +150,11 @@ struct MenuBarContentView: View {
 
   private func quitApp() {
     NSApplication.shared.terminate(nil)
+  }
+
+  private func openAboutPanel() {
+    NSApp.activate(ignoringOtherApps: true)
+    NSApplication.shared.orderFrontStandardAboutPanel(nil)
   }
 
   private func displayName(for window: SCWindow) -> String {
