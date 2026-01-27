@@ -51,6 +51,12 @@ struct AppFiltersView: View {
     .onAppear {
       excludedBundleIDs = WindowFilterSettings.excludedBundleIDs()
     }
+    .onChange(of: pipManager.hasPermission) { _, hasPermission in
+      guard hasPermission else { return }
+      Task {
+        await loadApps()
+      }
+    }
   }
 
   private func binding(for bundleID: String) -> Binding<Bool> {

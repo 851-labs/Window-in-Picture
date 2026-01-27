@@ -11,6 +11,7 @@ import SwiftUI
 struct SettingsView: View {
   let updaterController: UpdateChecking
   @State private var startAtLoginEnabled = SMAppService.mainApp.status == .enabled
+  @State private var loginError: String?
 
   var body: some View {
     TabView {
@@ -37,6 +38,12 @@ struct SettingsView: View {
     Form {
       Section("Login") {
         Toggle("Open at Login", isOn: $startAtLoginEnabled)
+
+        if let loginError {
+          Text(loginError)
+            .font(.caption)
+            .foregroundStyle(.red)
+        }
       }
     }
     .formStyle(.grouped)
@@ -45,6 +52,7 @@ struct SettingsView: View {
       startAtLoginEnabled = SMAppService.mainApp.status == .enabled
     }
     .onChange(of: startAtLoginEnabled) { _, newValue in
+      loginError = nil
       do {
         if newValue {
           try SMAppService.mainApp.register()
@@ -53,6 +61,7 @@ struct SettingsView: View {
         }
       } catch {
         startAtLoginEnabled = SMAppService.mainApp.status == .enabled
+        loginError = "Unable to update login item. Please try again."
       }
     }
   }

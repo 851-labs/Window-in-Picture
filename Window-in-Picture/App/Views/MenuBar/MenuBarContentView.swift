@@ -115,6 +115,7 @@ struct MenuBarContentView: View {
           } label: {
             Label {
               Text(displayName(for: window, appWindowCounts: appWindowCounts))
+                .lineLimit(1)
             } icon: {
               windowIcon(for: window)
             }

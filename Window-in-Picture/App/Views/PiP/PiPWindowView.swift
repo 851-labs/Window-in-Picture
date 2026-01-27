@@ -20,11 +20,7 @@ struct PiPWindowView: View {
         Color.black
 
         if let cgImage = manager.latestFrame {
-          let nsImage = NSImage(
-            cgImage: cgImage,
-            size: NSSize(width: cgImage.width, height: cgImage.height)
-          )
-          Image(nsImage: nsImage)
+          Image(decorative: cgImage, scale: 1.0, orientation: .up)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: geometry.size.width, height: geometry.size.height)

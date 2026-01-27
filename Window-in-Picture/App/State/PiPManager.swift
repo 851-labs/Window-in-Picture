@@ -5,6 +5,8 @@ import ScreenCaptureKit
 @MainActor
 @Observable
 class PiPManager: NSObject {
+  nonisolated private static let imageContext = CIContext()
+
   var availableWindows: [SCWindow] = []
   var hasPermission = false
   var isRefreshing = false
@@ -18,6 +20,7 @@ class PiPManager: NSObject {
   private var windowControllers: [PiPWindowController] = []
   private let picker = SCContentSharingPicker.shared
   private var pickerContinuation: CheckedContinuation<SCContentFilter?, Never>?
+  private let streamQueue = DispatchQueue(label: "PiPManager.Stream", qos: .userInitiated)
 
   override init() {
     super.init()
@@ -225,6 +228,8 @@ extension PiPManager {
       return
     }
 
+    closeAllWindows()
+
     let controller = PiPWindowController(window: window, displayName: windowName, manager: self)
     windowControllers.append(controller)
     controller.showWindow(nil)
@@ -249,6 +254,8 @@ extension PiPManager {
       existingController.window?.makeKeyAndOrderFront(nil)
       return
     }
+
+    closeAllWindows()
 
     let controller = PiPWindowController(
       filter: filter,
@@ -309,7 +316,7 @@ extension PiPManager {
     streamConfig.ignoreGlobalClipSingleWindow = true
 
     stream = SCStream(filter: filter, configuration: streamConfig, delegate: nil)
-    try stream?.addStreamOutput(self, type: .screen, sampleHandlerQueue: .main)
+    try stream?.addStreamOutput(self, type: .screen, sampleHandlerQueue: streamQueue)
     try await stream?.startCapture()
     isCapturing = true
   }
@@ -354,9 +361,7 @@ extension PiPManager: SCStreamOutput {
     else { return }
 
     let ciImage = CIImage(cvPixelBuffer: imageBuffer)
-    let context = CIContext()
-
-    if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+    if let cgImage = PiPManager.imageContext.createCGImage(ciImage, from: ciImage.extent) {
       Task { @MainActor in
         if self.isStreamActive {
           self.latestFrame = cgImage
