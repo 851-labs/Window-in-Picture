@@ -28,8 +28,8 @@
   <string>NSApplication</string>
   <key>SUFeedURL</key>
   <string>https://github.com/851-labs/Window-in-Picture/releases/latest/download/appcast.xml</string>
-  <key>SUEnableInstallerLauncherService</key>
-  <true/>
+	<key>SUEnableInstallerLauncherService</key>
+	<false/>
   <key>SUPublicEDKey</key>
   <string>U2QTeFj4OS3tznPQhjMaAG3jYCjjOxxS9SlQMTD/oKs=</string>
 </dict>
