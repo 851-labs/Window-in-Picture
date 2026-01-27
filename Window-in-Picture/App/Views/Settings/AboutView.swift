@@ -27,10 +27,6 @@ struct AboutView: View {
         VStack(spacing: 2) {
           PropertyRow(label: "Version", text: info.version)
           PropertyRow(label: "Build", text: info.build)
-          if let commit = info.commit, commit.isEmpty == false {
-            let url = info.githubURL.appendingPathComponent("/commits/\(commit)")
-            PropertyRow(label: "Commit", text: commit, url: url)
-          }
         }
         .frame(maxWidth: .infinity)
 
@@ -66,7 +62,6 @@ struct AboutInfo {
   let appName: String
   let version: String
   let build: String
-  let commit: String?
   let tagline: String
   let githubURL: URL
 
@@ -77,7 +72,6 @@ struct AboutInfo {
       ?? "Window-in-Picture"
     version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
     build = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
-    commit = bundle.object(forInfoDictionaryKey: "GitCommit") as? String
     tagline = "Picture-in-picture for any window."
     githubURL = URL(string: "https://github.com/851-labs/Window-in-Picture")!
   }
