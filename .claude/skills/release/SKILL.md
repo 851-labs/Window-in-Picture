@@ -23,7 +23,7 @@ git branch --show-current
 
 Update versions in `Window-in-Picture.xcodeproj/project.pbxproj`:
 
-- `MARKETING_VERSION` - Set to the new version (e.g., `1.0.24`)
+- `MARKETING_VERSION` - Bump the patch version (e.g. 0.1.27 → 0.1.28).
 - `CURRENT_PROJECT_VERSION` - Increment the integer by 1
 
 Use the Edit tool to update both occurrences of each version field.
