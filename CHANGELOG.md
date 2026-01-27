@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.28 - 2026-01-27
+- chore: no user-facing changes
+
 ## 1.0.27 - 2026-01-27
 - feat: add raster app icon
 - feat: increase README icon size
