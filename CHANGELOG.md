@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.26 - 2026-01-27
+- feat: add settings window shell
+- feat: unify settings and about
+- feat: add app exclusion settings
+- ui: polish PiP capture and settings UX
+- chore: remove refresh menu action
+
 ## 1.0.25 - 2026-01-27
 - feat: add app and menu bar icon assets
 - fix: include untitled app windows
