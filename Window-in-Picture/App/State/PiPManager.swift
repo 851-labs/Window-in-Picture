@@ -48,6 +48,15 @@ extension PiPManager {
       await refreshWindows()
     }
   }
+
+  func refreshPermissionState() async {
+    await checkPermission()
+    if hasPermission {
+      await refreshWindows()
+    } else {
+      availableWindows = []
+    }
+  }
 }
 
 // MARK: - Window Discovery

@@ -24,7 +24,7 @@ struct WindowInPictureApp: App {
     .menuBarExtraStyle(.menu)
 
     Settings {
-      SettingsView()
+      SettingsView(updaterController: updaterController)
     }
   }
 }

@@ -29,8 +29,15 @@ struct MenuBarContentView: View {
         permissionMenu
       }
     }
-    .task {
-      await refreshOnLaunch()
+    .onAppear {
+      Task {
+        await refreshPermissionState()
+      }
+    }
+    .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+      Task {
+        await refreshPermissionState()
+      }
     }
   }
 
@@ -64,12 +71,6 @@ struct MenuBarContentView: View {
         Label("Check for Updates...", systemImage: "square.and.arrow.down")
       }
       .disabled(updaterController == nil)
-
-      Button {
-        openAboutWindow()
-      } label: {
-        Label("About Window-in-Picture", systemImage: "info.circle")
-      }
 
       settingsButton
 
@@ -132,11 +133,8 @@ struct MenuBarContentView: View {
     }
   }
 
-  private func refreshOnLaunch() async {
-    await pipManager.checkPermission()
-    if pipManager.hasPermission {
-      await pipManager.refreshWindows()
-    }
+  private func refreshPermissionState() async {
+    await pipManager.refreshPermissionState()
   }
 
   private func requestPermission() async {
@@ -158,13 +156,9 @@ struct MenuBarContentView: View {
     NSApplication.shared.terminate(nil)
   }
 
-  private func openAboutWindow() {
-    AboutWindowController.shared.show()
-  }
-
   private var settingsButton: some View {
     SettingsLink {
-      Label("Settings...", systemImage: "gearshape")
+      Label("Settings...", systemImage: "gear")
     }
   }
 
