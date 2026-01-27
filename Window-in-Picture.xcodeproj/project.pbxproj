@@ -14,10 +14,23 @@
 		BC4FC7CD2EA85B38007E92A8 /* Window-in-Picture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Window-in-Picture.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		BC4FC7D02EA85B38007E92A8 /* Exceptions for "Window-in-Picture" folder in "Window-in-Picture" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Info.plist,
+			);
+			target = BC4FC7CC2EA85B38007E92A8 /* Window-in-Picture */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		BC4FC7CF2EA85B38007E92A8 /* Window-in-Picture */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Window-in-Picture;
+			exceptions = (
+				BC4FC7D02EA85B38007E92A8 /* Exceptions for "Window-in-Picture" folder in "Window-in-Picture" target */,
+			);
+			path = "Window-in-Picture";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -91,7 +104,7 @@
 					};
 				};
 			};
-			buildConfigurationList = BC4FC7C82EA85B38007E92A8 /* Build configuration list for PBXProject "floating" */;
+			buildConfigurationList = BC4FC7C82EA85B38007E92A8 /* Build configuration list for PBXProject "Window-in-Picture" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -269,7 +282,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = Window-in-Picture/Resources/Info.plist;
+				INFOPLIST_FILE = "Window-in-Picture/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -304,7 +317,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = Window-in-Picture/Resources/Info.plist;
+				INFOPLIST_FILE = "Window-in-Picture/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -327,7 +340,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BC4FC7C82EA85B38007E92A8 /* Build configuration list for PBXProject "floating" */ = {
+		BC4FC7C82EA85B38007E92A8 /* Build configuration list for PBXProject "Window-in-Picture" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BC4FC7D62EA85B3A007E92A8 /* Debug */,
