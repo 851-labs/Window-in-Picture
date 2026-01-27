@@ -67,8 +67,10 @@ struct MenuBarContentView: View {
 
       Divider()
 
-      Button("Quit", action: quitApp)
-        .keyboardShortcut("q")
+      Button(action: quitApp) {
+        Label("Quit", systemImage: "xmark.rectangle")
+      }
+      .keyboardShortcut("q")
     }
   }
 
