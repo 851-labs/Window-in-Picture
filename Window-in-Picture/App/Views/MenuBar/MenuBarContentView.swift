@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import ScreenCaptureKit
 import SwiftUI
 
 struct MenuBarContentView: View {
@@ -14,61 +15,107 @@ struct MenuBarContentView: View {
 
   let updaterController: UpdateChecking?
   @State private var isSelectingWindow = false
+  private let maxWindowTitleLength = 30
 
   init(updaterController: UpdateChecking? = nil) {
     self.updaterController = updaterController
   }
 
   var body: some View {
-    VStack(spacing: 0) {
-      MenuBarHeaderView()
-
-      Divider()
-        .padding(.horizontal, 9)
-
+    Group {
       if pipManager.hasPermission {
         menuContent
       } else {
-        PermissionPromptView(onEnable: requestPermission)
-          .padding()
+        permissionMenu
       }
     }
-    .padding(.horizontal, 5)
     .task {
       await refreshOnLaunch()
     }
   }
 
   private var menuContent: some View {
-    VStack(spacing: 0) {
-      VStack(spacing: 0) {
-        MenuBarButton(title: "Select Window", icon: "macwindow.badge.plus") {
-          selectWindowByClick()
-        }
-        .disabled(isSelectingWindow)
+    Group {
+      Button {
+        selectWindowByClick()
+      } label: {
+        Label("Select Window", systemImage: "macwindow.badge.plus")
       }
-      .padding(.vertical, 5)
+      .disabled(isSelectingWindow)
 
       Divider()
-        .padding(.horizontal, 9)
 
-      WindowListView(onSelect: { window in
-        pipManager.createPiPWindow(for: window)
-        dismiss()
-      }, manager: pipManager)
-      .frame(maxHeight: 300)
+      windowListSection
 
       Divider()
-        .padding(.horizontal, 9)
 
-      MenuBarActionsView(
-        updaterController: updaterController,
-        onQuit: { NSApplication.shared.terminate(nil) },
-        manager: pipManager
-      )
-      .padding(.vertical, 5)
+      Button {
+        Task {
+          await pipManager.refreshWindows()
+        }
+      } label: {
+        Label("Refresh", systemImage: "arrow.clockwise")
+      }
+      .disabled(pipManager.isRefreshing)
+
+      Button {
+        updaterController?.checkForUpdates(nil)
+      } label: {
+        Label("Check for Updates...", systemImage: "square.and.arrow.down")
+      }
+      .disabled(updaterController == nil)
+
+      Divider()
+
+      Button("Quit", action: quitApp)
+        .keyboardShortcut("q")
     }
-    .frame(width: 320)
+  }
+
+  private var permissionMenu: some View {
+    Group {
+      Text("Enable Screen Capture Access")
+        .fontWeight(.semibold)
+        .disabled(true)
+
+      Text("We use Screen Capture to mirror windows for picture-in-picture mode.")
+        .disabled(true)
+
+      Divider()
+
+      Button {
+        Task {
+          await requestPermission()
+        }
+      } label: {
+        Label("Enable", systemImage: "lock.open")
+      }
+    }
+  }
+
+  private var windowListSection: some View {
+    Group {
+      if pipManager.isRefreshing {
+        Text("Loading windows...")
+          .disabled(true)
+      } else if pipManager.availableWindows.isEmpty {
+        Text("No windows available")
+          .disabled(true)
+      } else {
+        ForEach(pipManager.availableWindows, id: \.windowID) { window in
+          Button {
+            pipManager.createPiPWindow(for: window)
+            dismiss()
+          } label: {
+            Label {
+              Text(displayName(for: window))
+            } icon: {
+              windowIcon(for: window)
+            }
+          }
+        }
+      }
+    }
   }
 
   private func refreshOnLaunch() async {
@@ -91,6 +138,36 @@ struct MenuBarContentView: View {
       try? await Task.sleep(nanoseconds: 200_000_000)
       await pipManager.presentWindowPicker()
     }
+  }
+
+  private func quitApp() {
+    NSApplication.shared.terminate(nil)
+  }
+
+  private func displayName(for window: SCWindow) -> String {
+    if let appName = window.owningApplication?.applicationName,
+       let windowTitle = window.title {
+      return truncatedTitle("\(appName) - \(windowTitle)")
+    }
+    return truncatedTitle(window.title ?? "Unknown Window")
+  }
+
+  private func truncatedTitle(_ title: String) -> String {
+    guard title.count > maxWindowTitleLength else { return title }
+    let endIndex = title.index(title.startIndex, offsetBy: maxWindowTitleLength)
+    return String(title[..<endIndex]).trimmingCharacters(in: .whitespaces) + "…"
+  }
+
+  private func windowIcon(for window: SCWindow) -> Image {
+    guard let bundleID = window.owningApplication?.bundleIdentifier,
+          let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID)
+    else {
+      return Image(systemName: "app.dashed")
+    }
+
+    let icon = NSWorkspace.shared.icon(forFile: appURL.path)
+    icon.size = NSSize(width: 16, height: 16)
+    return Image(nsImage: icon)
   }
 }
 

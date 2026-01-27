@@ -18,6 +18,6 @@ struct WindowInPictureApp: App {
       MenuBarContentView(updaterController: updaterController)
         .environment(pipManager)
     }
-    .menuBarExtraStyle(.window)
+    .menuBarExtraStyle(.menu)
   }
 }
