@@ -106,7 +106,7 @@ extension PiPManager {
     if bundleID.isEmpty
       && [
         "underbelly",
-        "Display 1 Backstop",
+        "Backstop",
         "Menubar",
         "StatusIndicator",
         "Cursor",
