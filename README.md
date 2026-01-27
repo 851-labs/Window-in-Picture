@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/851-labs/Window-in-Picture/blob/main/Window-in-Picture/Resources/RasterIcon.png">
-    <img src="https://github.com/851-labs/Window-in-Picture/raw/main/Window-in-Picture/Resources/RasterIcon.png" alt="Window-in-Picture logo" width="160">
+    <img src="https://github.com/851-labs/Window-in-Picture/raw/main/Window-in-Picture/Resources/RasterIcon.png" alt="Window-in-Picture logo" width="180">
   </a>
   <h1><b>Window-in-Picture</b></h1>
   <p>Lightweight menubar app that mirrors any window in picture-in-picture mode.<br>Native, fast, and private by design.</p>
