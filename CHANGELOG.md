@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.27 - 2026-01-27
+- feat: add raster app icon
+- feat: increase README icon size
+- feat: refine release workflow guidance
+- docs: add raster icon preview to README
+- docs: add DeepWiki badge
+- docs: remove OpenCode from tech stack
+
 ## 1.0.26 - 2026-01-27
 - feat: add settings window shell
 - feat: unify settings and about
