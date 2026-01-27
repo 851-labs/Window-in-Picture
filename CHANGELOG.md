@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.23 - 2026-01-26
+- fix: exclude Info.plist from synced resources
+- chore: apply Xcode recommended settings
+
 ## 1.0.22 - 2026-01-25
 - chore: rename floating folder to Window-in-Picture
 
