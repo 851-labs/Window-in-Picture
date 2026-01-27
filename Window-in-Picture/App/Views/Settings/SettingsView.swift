@@ -19,6 +19,11 @@ struct SettingsView: View {
           Label("General", systemImage: "gearshape")
         }
 
+      AppFiltersView()
+        .tabItem {
+          Label("Apps", systemImage: "app.badge")
+        }
+
       AboutView(info: AboutInfo(), updaterController: updaterController)
         .tabItem {
           Label("About", systemImage: "info.circle")

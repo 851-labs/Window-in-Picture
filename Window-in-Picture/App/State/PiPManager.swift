@@ -113,25 +113,7 @@ extension PiPManager {
       return false
     }
 
-    if [
-      "com.apple.controlcenter",
-      "com.apple.notificationcenterui",
-      "com.apple.systemuiserver",
-      "com.apple.dock",
-      "com.apple.WindowManager",
-      "com.apple.screencaptureui",
-      "com.apple.screenshot.window",
-      "com.apple.TextInputMenuAgent",
-      "com.apple.TextInputSwitcher",
-      "com.apple.finder.Open-With-Pro",
-      "com.apple.AirPlayUIAgent",
-      "com.apple.WiFiAgent",
-      "com.apple.BluetoothUIService",
-      "com.apple.wallpaper.agent",
-      "com.apple.AccessibilityUIServer",
-      "com.apple.Spotlight",
-      "com.steipete.codexbar",
-    ].contains(bundleID) {
+    if WindowFilterSettings.excludedBundleIDs().contains(bundleID) {
       return false
     }
 

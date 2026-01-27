@@ -25,6 +25,7 @@ struct WindowInPictureApp: App {
 
     Settings {
       SettingsView(updaterController: updaterController)
+        .environment(pipManager)
     }
   }
 }
