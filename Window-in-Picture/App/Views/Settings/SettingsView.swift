@@ -47,7 +47,6 @@ struct SettingsView: View {
       }
     }
     .formStyle(.grouped)
-    .padding(12)
     .onAppear {
       startAtLoginEnabled = SMAppService.mainApp.status == .enabled
     }

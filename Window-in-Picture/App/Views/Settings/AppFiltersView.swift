@@ -44,7 +44,6 @@ struct AppFiltersView: View {
       }
     }
     .formStyle(.grouped)
-    .padding(12)
     .task {
       await loadApps()
     }
