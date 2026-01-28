@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.32 - 2026-01-28
+- fix: restore Sparkle installer launcher for sandboxed app
+
 ## 1.0.31 - 2026-01-28
 - fix: remove Sparkle installer launcher key
 
