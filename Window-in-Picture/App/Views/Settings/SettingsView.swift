@@ -36,7 +36,7 @@ struct SettingsView: View {
 
   private var settingsPane: some View {
     Form {
-      Section("Login") {
+      Section {
         Toggle("Open at Login", isOn: $startAtLoginEnabled)
 
         if let loginError {
