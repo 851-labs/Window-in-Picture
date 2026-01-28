@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.33 - 2026-01-28
+- chore: no user-facing changes
+
 ## 1.0.32 - 2026-01-28
 - fix: restore Sparkle installer launcher for sandboxed app
 
