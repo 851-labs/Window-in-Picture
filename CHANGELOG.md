@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.31 - 2026-01-28
+- fix: remove Sparkle installer launcher key
+
 ## 1.0.30 - 2026-01-27
 - chore: no user-facing changes
 
