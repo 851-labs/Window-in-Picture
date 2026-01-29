@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.34 - 2026-01-29
+- feat: polish PiP window chrome and controls
+- fix: remove extra settings padding
+- fix: remove login section header
+- docs: switch to MIT license
+- docs: add README description
+
 ## 1.0.33 - 2026-01-28
 - chore: no user-facing changes
 
