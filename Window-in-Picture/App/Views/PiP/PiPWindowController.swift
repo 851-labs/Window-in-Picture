@@ -37,7 +37,7 @@ class PiPWindowController: NSWindowController, NSWindowDelegate {
     // Create the window
     let pipWindow = NSWindow(
       contentRect: NSRect(x: 0, y: 0, width: pipWidth, height: pipHeight),
-      styleMask: [.titled, .closable, .resizable, .miniaturizable],
+      styleMask: [.titled, .resizable, .fullSizeContentView],
       backing: .buffered,
       defer: false
     )
@@ -74,8 +74,12 @@ class PiPWindowController: NSWindowController, NSWindowDelegate {
     window.level = .floating // Always on top
     window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
     window.isMovableByWindowBackground = true
-    window.titlebarAppearsTransparent = false
+    window.titleVisibility = .hidden
+    window.titlebarAppearsTransparent = true
     window.backgroundColor = .black
+    window.standardWindowButton(.closeButton)?.isHidden = true
+    window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+    window.standardWindowButton(.zoomButton)?.isHidden = true
 
     // Set minimum size
     window.minSize = NSSize(width: 200, height: 150)
@@ -94,7 +98,9 @@ class PiPWindowController: NSWindowController, NSWindowDelegate {
     guard let window = window else { return }
 
     // Create the content view
-    let contentView = PiPWindowView(manager: manager)
+    let contentView = PiPWindowView(manager: manager) { [weak window] in
+      window?.close()
+    }
     let hostingView = NSHostingView(rootView: contentView)
 
     window.contentView = hostingView
